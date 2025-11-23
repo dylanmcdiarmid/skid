@@ -31,7 +31,7 @@
       "@pages/*": ["client/src/pages/*"],
       "@/types/*": ["client/src/types/*"]
     },
-    "types": ["@rspack/core/module"]
+    "types": ["@rspack/core/module", "bun-types"]
   },
   "include": ["client/tests/types.ts", "client/tests", "client/src"]
 }

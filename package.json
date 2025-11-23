@@ -10,7 +10,7 @@
     "build:css:prod": "sh scripts/build-css.sh prod",
     "build:migration": "migrate create -ext=.sql -dir=internal/db/migrations -seq -digits=1",
     "dev:client": "concurrently --prefix \"[{name}]\" --prefix-colors \"blue,green\" -n js,css \"bun run build:js\" \"bun run build:css\"",
-    "dev:server": "air -c .air.toml",
+    "dev:server": "bun run --watch src/index.ts",
     "dev:all": "concurrently --prefix \"[{name}]\" --prefix-colors \"cyan,magenta\" -n client,server \"bun run dev:client\" \"bun run dev:server\"",
     "build": "tsc -b && bun run build:css:prod && bun run build:js:prod",
     "lint": "ultracite check",
