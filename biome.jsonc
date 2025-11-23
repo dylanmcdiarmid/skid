@@ -1,0 +1,31 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.2.2/schema.json",
+  "extends": ["ultracite"],
+  "files": {
+    "includes": [
+      "!client/src/gen",
+      "!client/src/test_assets/qunit.js",
+      "!client/src/test_assets/qunit.css",
+      "!scripts/protoc-ts-bases",
+      "!bun.lock"
+    ]
+  },
+  "linter": {
+    "rules": {
+      "style": {
+        "noMagicNumbers": "off",
+        "noDoneCallback": "off"
+      },
+      "suspicious": {
+        "noConsole": {
+          "options": {
+            "allow": ["error"]
+          }
+        }
+      },
+      "nursery": {
+        "useConsistentTypeDefinitions": "off"
+      }
+    }
+  }
+}
