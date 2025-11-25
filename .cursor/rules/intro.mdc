@@ -1,0 +1,66 @@
+---
+alwaysApply: false
+---
+# Project Context: Dynamic Practice Scheduler
+
+## 1. Project Mission
+We are building a **single-user daily practice scheduling application**. While primarily focused on music practice (piano, guitar), the domain is flexible enough to handle workouts, chores, and other routines.
+
+The core value proposition is **"Structured Flexibility."** The user wants a rigorous plan based on templates, but acknowledges that:
+1.  Content changes daily (e.g., today's keys are different from yesterday's).
+2.  Life happens (sessions need to be shortened, moved, or canceled).
+3.  Ideas happen (planning items need to be captured instantly without breaking flow).
+
+## 2. Core Mental Model: Templates vs. Instances
+
+The application relies heavily on a separation between **Blueprints (Templates)** and **Reality (Instances)**.
+
+* **Templates are Rigid:** `day_templates` and `practice_session_templates` represent the *ideal* version of a routine. They are rarely changed.
+* **Instances are Fluid:** Once a day is "generated" (instantiated), it becomes a snapshot. The user can freely edit the text, time, and order of `practice_session_instances` and their line items without affecting the original template.
+* **The "Day ID" is the Date:** We do not use UUIDs for `day_instances`. We use ISO 8601 strings (`YYYY-MM-DD`). This makes date math and sorting trivial.
+
+## 3. Key Feature: The Generator System (Dependency Injection)
+This is the most complex logic in the app. A Practice Session Template (e.g., "Piano") often requires dynamic content that changes every time the session is run.
+
+* **The Problem:** A template says "Play Scales," but the user needs to know *which* scales to play today.
+* **The Solution:**
+    1.  **Requirement:** A template declares it needs a Generator (e.g., "3 Random Keys").
+    2.  **Staging:** When generating a day, the UI presents a "Generator Interface." The user clicks "Generate" to see options (e.g., "C Major, F# Minor, B Flat").
+    3.  **Persistence:** The user **Accepts** these values. They are saved into `practice_session_instance_generated_values` and displayed as context for that specific session.
+    4.  **History:** We track what was generated (`generator_history`) to support strategies like "Least Recently Used" (don't give me the same key I played yesterday).
+
+## 4. Key Feature: The Planning Inbox
+The "Planning" screen acts as a brain dump/inbox to prevent cognitive load during practice.
+
+* **Capture:** Users can create a `planning_item` at any time.
+* **Defer (Snooze):** Items can be "kicked" to a future date (`min_day_instance_id`). They should not appear in the active view until that date.
+* **Reject:** Items can be marked as completed but `was_rejected`, preserving them in history as "decided against" rather than "done."
+* **Integration:** Eventually, a planning item is usually converted into a `practice_session_line_item` or completed manually.
+
+## 5. User Experience & Behavioral Rules
+* **Ordering is Manual:** We rely on explicit `sort_order` columns. Database retrieval order is unreliable; the UI must always respect the integer sort order.
+* **Granularity:**
+    * We track *Time* at the **Session** level (Piano: 60 mins).
+    * We track *Completion* at the **Line Item** level (Hanon Ex 1: Done).
+* **Forgiveness:** The user can add "Unplanned Sessions" to a day that do not originate from a template. The UI must handle sessions where `practice_session_template_id` is null.
+
+## 6. Technical Stack & Data Access
+* **Database:** SQLite (via Turso).
+* **ORM:** Kysely with dbmate for migrations
+* **Language:** TypeScript.
+* **Ids:** Client-side generated UUIDs for entities, strict `YYYY-MM-DD` strings for Day Instances.
+
+## 7. Testing
+Use 'bun:test' for testing. src/testutils.ts has a createTestDb function that allows us to use in-memory databases to test with. If you see we're missing a utility that will likely be used more than once, add it to testutils.
+
+Tests should be next to the file they are testing, e.g. foo.ts gets foo.test.ts
+
+## 8. API
+When writing an API, we should use Elysia's Eden Treaty. 
+
+## 9. Data Access Objects
+Business logic should always be called through Data Access Objects. These are simple classes that receive a Kysely<Database> "db" type on instatiation, and then just have methods to wrap CRUD and other database operations. This gives us a layer inbetween the kysely database functions and business logic.
+
+DAOs live in ./src/daos. If a dao method needs to access another dao, it can import that dao and instantiate it within the method, passing in it's own db.
+
+Often we will just return the basic row types from our DAO methods, but this also gives us a place to convert one or more database types into something more appropriate.

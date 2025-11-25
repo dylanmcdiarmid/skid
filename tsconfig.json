@@ -3,7 +3,11 @@
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.tsbuildinfo",
     "target": "ES2022",
     "useDefineForClassFields": true,
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "lib": [
+      "ES2022",
+      "DOM",
+      "DOM.Iterable"
+    ],
     "module": "ESNext",
     "skipLibCheck": true,
     "moduleResolution": "bundler",
@@ -21,17 +25,42 @@
     "strictNullChecks": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["client/src/*"],
-      "@gen/*": ["client/src/gen/*"],
-      "@tests/*": ["client/tests/*"],
-      "@state/*": ["client/src/state/*"],
-      "@lib/*": ["client/src/lib/*"],
-      "@hooks/*": ["client/src/hooks/*"],
-      "@components/*": ["client/src/components/*"],
-      "@pages/*": ["client/src/pages/*"],
-      "@/types/*": ["client/src/types/*"]
+      "@/*": [
+        "client/src/*"
+      ],
+      "@gen/*": [
+        "client/src/gen/*"
+      ],
+      "@tests/*": [
+        "client/tests/*"
+      ],
+      "@state/*": [
+        "client/src/state/*"
+      ],
+      "@lib/*": [
+        "client/src/lib/*"
+      ],
+      "@hooks/*": [
+        "client/src/hooks/*"
+      ],
+      "@components/*": [
+        "client/src/components/*"
+      ],
+      "@pages/*": [
+        "client/src/pages/*"
+      ],
+      "@/types/*": [
+        "client/src/types/*"
+      ]
     },
-    "types": ["@rspack/core/module", "bun-types"]
+    "types": [
+      "@rspack/core/module",
+      "bun-types"
+    ]
   },
-  "include": ["client/tests/types.ts", "client/tests", "client/src"]
+  "include": [
+    "client/tests/types.ts",
+    "client/tests",
+    "client/src"
+  ]
 }

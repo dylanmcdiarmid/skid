@@ -1,6 +1,8 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.2.2/schema.json",
-  "extends": ["ultracite"],
+  "extends": [
+    "ultracite"
+  ],
   "files": {
     "includes": [
       "!client/src/gen",
@@ -14,12 +16,17 @@
     "rules": {
       "style": {
         "noMagicNumbers": "off",
-        "noDoneCallback": "off"
+        "noDoneCallback": "off",
+        "noParameterProperties": "off"
       },
       "suspicious": {
+        "noExplicitAny": "off",
+        "useAwait": "off",
         "noConsole": {
           "options": {
-            "allow": ["error"]
+            "allow": [
+              "error"
+            ]
           }
         }
       },
