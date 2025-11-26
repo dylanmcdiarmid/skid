@@ -70,6 +70,7 @@ export class SessionTemplatesDAO {
   async addLineItem(item: {
     practice_session_template_id: string;
     display: string;
+    title?: string;
     sort_order?: number;
   }) {
     const id = crypto.randomUUID();
@@ -79,10 +80,27 @@ export class SessionTemplatesDAO {
         id,
         practice_session_template_id: item.practice_session_template_id,
         display: item.display,
+        title: item.title ?? null,
         sort_order: item.sort_order ?? 0,
       })
       .returningAll()
       .executeTakeFirstOrThrow();
+  }
+
+  async updateLineItem(
+    id: string,
+    updates: {
+      display?: string;
+      title?: string | null;
+      sort_order?: number;
+    }
+  ) {
+    return this.db
+      .updateTable('practice_session_line_items')
+      .set(updates)
+      .where('id', '=', id)
+      .returningAll()
+      .executeTakeFirst();
   }
 
   async getLineItems(practice_session_template_id: string) {

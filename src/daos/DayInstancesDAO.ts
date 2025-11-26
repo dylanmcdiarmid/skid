@@ -104,6 +104,7 @@ export class DayInstancesDAO {
     practice_session_instance_id: string;
     source_line_item_id?: string;
     display: string;
+    title?: string;
     sort_order?: number;
     notes?: string;
   }) {
@@ -115,6 +116,7 @@ export class DayInstancesDAO {
         practice_session_instance_id: data.practice_session_instance_id,
         source_line_item_id: data.source_line_item_id ?? null,
         display: data.display,
+        title: data.title ?? null,
         sort_order: data.sort_order ?? 0,
         notes: data.notes ?? null,
       })
@@ -135,6 +137,7 @@ export class DayInstancesDAO {
     id: string,
     updates: {
       display?: string;
+      title?: string | null;
       sort_order?: number;
       is_completed?: number; // 0 or 1
       completed_at?: number | null;

@@ -4,6 +4,7 @@ node_modules
 # output
 out
 dist
+dist-tests
 *.tgz
 
 # code coverage
@@ -35,3 +36,8 @@ report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
 
 config.toml
 *.sqlite
+
+public/js/dev/
+public/js/prod/
+public/css/dev/
+public/css/prod/

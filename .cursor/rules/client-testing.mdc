@@ -1,0 +1,5 @@
+---
+alwaysApply: false
+---
+You can run all client side tests using `bun run test:client` or filter (based on matching a part of the file name) using
+`bun run test:client -- file1,file2` 

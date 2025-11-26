@@ -1,9 +1,5 @@
 // has a corresponding type in server.go
 export interface IndexGlobals {
-  isSupervisor: boolean;
-  isLoggedIn: boolean;
-  userEmail: string;
-  simulationEnabled: boolean;
   isDev: boolean;
 }
 

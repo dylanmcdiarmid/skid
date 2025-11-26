@@ -1,14 +1,14 @@
-import { isDev, type PagArgs, type Pagination } from "@lib/utils";
-import type { PrimitiveAtom } from "jotai";
-import { atom as jotaiAtom, useSetAtom } from "jotai";
-import { useCallback, useRef } from "react";
+import { isDev, type PagArgs, type Pagination } from '@lib/utils';
+import type { PrimitiveAtom } from 'jotai';
+import { atom as jotaiAtom, useSetAtom } from 'jotai';
+import { useCallback, useRef } from 'react';
 import {
   dateToMs,
   fromSeconds,
   nowMs,
   type Second,
   secondsToMs,
-} from "@/types/time-brands";
+} from '@/types/time-brands';
 
 export const paramsAtom = jotaiAtom<Record<string, Record<string, unknown>>>(
   {}
@@ -33,13 +33,13 @@ const shallowComparison = <TParams>(
   obj1: TParams extends Record<string, unknown> ? TParams : never,
   obj2: TParams extends Record<string, unknown> ? TParams : never
 ) => {
-  if (typeof obj1 !== "object" && typeof obj2 === "object") {
+  if (typeof obj1 !== 'object' && typeof obj2 === 'object') {
     return false;
   }
-  if (typeof obj1 === "object" && typeof obj2 !== "object") {
+  if (typeof obj1 === 'object' && typeof obj2 !== 'object') {
     return false;
   }
-  if (typeof obj1 !== "object" && typeof obj2 !== "object") {
+  if (typeof obj1 !== 'object' && typeof obj2 !== 'object') {
     return true;
   }
   return (
@@ -110,15 +110,10 @@ export class CachedPages<T> {
   }
 }
 
-export const defaultCachedPagesCache: Map<
-  string,
-  // biome-ignore lint/suspicious/noExplicitAny: <shared caching of different types>
-  CachedPages<any>
-> = new Map();
+export const defaultCachedPagesCache: Map<string, CachedPages<any>> = new Map();
 
 export const getCachedPages = <T>(
   cacheKey: string,
-  // biome-ignore lint/suspicious/noExplicitAny: <shared caching of different types>
   cache: Map<string, CachedPages<any>> = defaultCachedPagesCache
 ): CachedPages<T> => {
   let ret = cache.get(cacheKey);
@@ -239,13 +234,13 @@ export function usePaginatedFetcher<
   );
   if (isDev()) {
     if (cacheKey.current !== cacheKeyArg) {
-      throw new Error("cacheKey is invariant");
+      throw new Error('cacheKey is invariant');
     }
     if (maxPageLifetime.current !== maxPageLifetimeArg) {
-      throw new Error("maxPageLifetime is invariant");
+      throw new Error('maxPageLifetime is invariant');
     }
     if (cachedPagesCache.current !== cachedPagesCacheArg) {
-      throw new Error("cachedPagesCache is invariant");
+      throw new Error('cachedPagesCache is invariant');
     }
   }
 
@@ -303,14 +298,14 @@ export function usePaginatedFetcher<
           // returns, meaning we can't clear pendingRequestParams as they'll be
           // set to the new request arguments in cases where abort was called
           // automatically to do a new request
-          if (err && err.name === "AbortError") {
+          if (err && err.name === 'AbortError') {
             return;
           }
           outgoingRequestAbort.current = null;
           setPendingRequestParams(null);
           setIsLoading(false);
           setError({
-            message: err instanceof Error ? err.message : "Error loading page",
+            message: err instanceof Error ? err.message : 'Error loading page',
           });
         });
       return;

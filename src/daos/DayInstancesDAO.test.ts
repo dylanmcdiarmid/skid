@@ -73,6 +73,55 @@ describe('DayInstancesDAO', () => {
     expect(updated?.is_completed).toBe(1);
   });
 
+  it('should create line item with optional title', async () => {
+    const date = '2023-10-29';
+    await dao.createDay({ id: date });
+    const session = await dao.createSession({
+      day_instance_id: date,
+      display: 'S1',
+    });
+
+    const itemWithTitle = await dao.createLineItem({
+      practice_session_instance_id: session.id,
+      display: 'Practice Hanon Exercise 1',
+      title: 'Hanon',
+    });
+
+    const itemWithoutTitle = await dao.createLineItem({
+      practice_session_instance_id: session.id,
+      display: 'Practice Scales',
+    });
+
+    expect(itemWithTitle.title).toBe('Hanon');
+    expect(itemWithoutTitle.title).toBeNull();
+
+    const items = await dao.getLineItemsForSession(session.id);
+    expect(items[0].title).toBe('Hanon');
+    expect(items[1].title).toBeNull();
+  });
+
+  it('should update line item title', async () => {
+    const date = '2023-10-30';
+    await dao.createDay({ id: date });
+    const session = await dao.createSession({
+      day_instance_id: date,
+      display: 'S1',
+    });
+
+    const item = await dao.createLineItem({
+      practice_session_instance_id: session.id,
+      display: 'Some item',
+    });
+
+    expect(item.title).toBeNull();
+
+    const updated = await dao.updateLineItem(item.id, { title: 'New Title' });
+    expect(updated?.title).toBe('New Title');
+
+    const cleared = await dao.updateLineItem(item.id, { title: null });
+    expect(cleared?.title).toBeNull();
+  });
+
   it('should manage generated values', async () => {
     const date = '2023-10-28';
     await dao.createDay({ id: date });

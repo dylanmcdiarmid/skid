@@ -10,6 +10,7 @@ CREATE TABLE practice_session_templates (
 CREATE TABLE practice_session_line_items (
   id TEXT PRIMARY KEY NOT NULL,
   practice_session_template_id TEXT NOT NULL REFERENCES practice_session_templates(id) ON DELETE CASCADE,
+  title TEXT,
   display TEXT NOT NULL,
   sort_order INTEGER DEFAULT 0,
   created_at INTEGER DEFAULT (unixepoch())
@@ -50,6 +51,7 @@ CREATE TABLE practice_session_instance_line_items (
   id TEXT PRIMARY KEY NOT NULL,
   practice_session_instance_id TEXT NOT NULL REFERENCES practice_session_instances(id) ON DELETE CASCADE,
   source_line_item_id TEXT REFERENCES practice_session_line_items(id) ON DELETE SET NULL,
+  title TEXT,
   display TEXT NOT NULL,
   sort_order INTEGER DEFAULT 0,
   is_completed INTEGER DEFAULT 0,

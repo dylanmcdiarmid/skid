@@ -1,0 +1,21 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "baseUrl": "..",
+    "paths": {
+      "@/*": ["client/src/*"],
+      "@gen/*": ["client/src/gen/*"],
+      "@tests/*": ["client/tests/*"],
+      "@state/*": ["client/src/state/*"],
+      "@lib/*": ["client/src/lib/*"],
+      "@hooks/*": ["client/src/hooks/*"],
+      "@components/*": ["client/src/components/*"],
+      "@pages/*": ["client/src/pages/*"],
+      "@/types/*": ["client/src/types/*"]
+    },
+    "types": ["@rspack/core/module", "react", "react-dom"]
+  },
+  "include": ["src", "tests"]
+}
+

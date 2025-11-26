@@ -73,6 +73,7 @@ export interface PracticeSessionInstanceLineItems {
   practice_session_instance_id: string;
   sort_order: Generated<number | null>;
   source_line_item_id: string | null;
+  title: string | null;
 }
 
 export interface PracticeSessionInstances {
@@ -95,6 +96,7 @@ export interface PracticeSessionLineItems {
   id: string;
   practice_session_template_id: string;
   sort_order: Generated<number | null>;
+  title: string | null;
 }
 
 export interface PracticeSessionTemplateRequiredGenerators {

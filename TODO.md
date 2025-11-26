@@ -174,6 +174,9 @@ We should have an unobtrusive menu at the top that allows navigating to any of t
 
 Ctrl+Space should bring up a "quick entry" popover. By default this should let the user enter a new item to send to planning.
 
+## Final Instruction
+It is vital that we do NOT generate any Next.js specific code. In our situation, we are completely forbidden from using Next.js, let's try to stick to React and shadcn, and for routing we can use react-router-dom. For API calls / data, let's just mock them for now on a layer that we can replace with real data later.
+
 ---
 
 # Notes on Generator History Page

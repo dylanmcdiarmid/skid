@@ -64,6 +64,47 @@ describe('SessionTemplatesDAO', () => {
     expect(items[1].display).toBe('Item 2');
   });
 
+  it('should add line item with optional title', async () => {
+    const template = await dao.create({ unique_name: 't1', display: 'T1' });
+
+    const itemWithTitle = await dao.addLineItem({
+      practice_session_template_id: template.id,
+      display: 'Practice Hanon Exercise 1',
+      title: 'Hanon',
+      sort_order: 1,
+    });
+
+    const itemWithoutTitle = await dao.addLineItem({
+      practice_session_template_id: template.id,
+      display: 'Practice Scales',
+      sort_order: 2,
+    });
+
+    expect(itemWithTitle.title).toBe('Hanon');
+    expect(itemWithoutTitle.title).toBeNull();
+
+    const items = await dao.getLineItems(template.id);
+    expect(items[0].title).toBe('Hanon');
+    expect(items[1].title).toBeNull();
+  });
+
+  it('should update line item title', async () => {
+    const template = await dao.create({ unique_name: 't1', display: 'T1' });
+
+    const item = await dao.addLineItem({
+      practice_session_template_id: template.id,
+      display: 'Item 1',
+    });
+
+    expect(item.title).toBeNull();
+
+    const updated = await dao.updateLineItem(item.id, { title: 'New Title' });
+    expect(updated?.title).toBe('New Title');
+
+    const cleared = await dao.updateLineItem(item.id, { title: null });
+    expect(cleared?.title).toBeNull();
+  });
+
   it('should add and remove required generators', async () => {
     const template = await dao.create({ unique_name: 't1', display: 'T1' });
 

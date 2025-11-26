@@ -1,23 +1,23 @@
-import QUnit from "qunit";
+import QUnit from 'qunit';
 
 const { module, test } = QUnit;
 
 import {
   type PaginatedDataFetchFns,
   usePaginatedFetcher,
-} from "@hooks/use-paginated-fetcher";
-import type { PagArgs, Pagination } from "@lib/utils";
+} from '@hooks/use-paginated-fetcher';
+import type { PagArgs, Pagination } from '@lib/utils';
 import {
   assertIsAtom,
   getAtomValue,
   renderHook,
   sleep,
   waitForAtomUpdate,
-} from "@tests/test-utils";
-import { createStore } from "jotai";
-import { fromSeconds } from "@/types/time-brands";
+} from '@tests/test-utils';
+import { createStore } from 'jotai';
+import { fromSeconds } from '@/types/time-brands';
 
-module("Hook | usePaginatedFetcher", () => {
+module('Hook | usePaginatedFetcher', () => {
   function makePagination<T = any>(
     items: T[],
     overrides: Partial<Pagination<T>> = {}
@@ -48,13 +48,13 @@ module("Hook | usePaginatedFetcher", () => {
     };
   };
 
-  test("usePaginatedFetcher empty response", async (assert) => {
+  test('usePaginatedFetcher empty response', async (assert) => {
     const store = createStore();
     const { result } = renderHook(
       () =>
         usePaginatedFetcher({
           fetcher: emptyFetcher,
-          cacheKey: "test",
+          cacheKey: 'test',
           cachedPagesCache: new Map(),
         }),
       { store }
@@ -83,10 +83,6 @@ module("Hook | usePaginatedFetcher", () => {
 
   // Ensure globals exist for dev-mode checks used by the hook
   (window as any).__globals = (window as any).__globals || {
-    isSupervisor: false,
-    isLoggedIn: false,
-    userEmail: "",
-    simulationEnabled: false,
     isDev: true,
   };
 
@@ -94,7 +90,7 @@ module("Hook | usePaginatedFetcher", () => {
     return Array.from({ length: count }, (_, i) => start + i);
   }
 
-  test("usePaginatedFetcher non-empty response and loading toggles", async (assert) => {
+  test('usePaginatedFetcher non-empty response and loading toggles', async (assert) => {
     const store = createStore();
     const delayMs = 5;
 
@@ -110,7 +106,7 @@ module("Hook | usePaginatedFetcher", () => {
         response: async () => {
           await sleep(delayMs);
           if (aborted as boolean) {
-            throw new Error("Aborted");
+            throw new Error('Aborted');
           }
           const numberOfItemsToMake = 5;
           return makePagination(makeItems(numberOfItemsToMake), {
@@ -127,7 +123,7 @@ module("Hook | usePaginatedFetcher", () => {
       () =>
         usePaginatedFetcher<number>({
           fetcher,
-          cacheKey: "test-non-empty",
+          cacheKey: 'test-non-empty',
           cachedPagesCache: new Map(),
         }),
       { store }
@@ -167,7 +163,7 @@ module("Hook | usePaginatedFetcher", () => {
     // })
   });
 
-  test("caches page results and serves from cache on repeat calls", async (assert) => {
+  test('caches page results and serves from cache on repeat calls', async (assert) => {
     const store = createStore();
     let responseCalls = 0;
     const fetcher = (
@@ -194,7 +190,7 @@ module("Hook | usePaginatedFetcher", () => {
       () =>
         usePaginatedFetcher<string>({
           fetcher,
-          cacheKey: "test-cache",
+          cacheKey: 'test-cache',
           cachedPagesCache: new Map(),
         }),
       { store }
@@ -207,7 +203,7 @@ module("Hook | usePaginatedFetcher", () => {
       executeAfterSubscribe: () =>
         result.current.loadPage({ page: 1, pageSize: 25 }),
     });
-    assert.equal(first.items[0], "item-1-25");
+    assert.equal(first.items[0], 'item-1-25');
     assert.equal(responseCalls, 1);
 
     // Reset the data atom so when we update with the same data, it still triggers a new subscription
@@ -218,16 +214,16 @@ module("Hook | usePaginatedFetcher", () => {
       executeAfterSubscribe: () =>
         result.current.loadPage({ page: 1, pageSize: 25 }),
     });
-    assert.equal(second.items[0], "item-1-25");
+    assert.equal(second.items[0], 'item-1-25');
     assert.equal(
       responseCalls,
       1,
-      "should not call response again for cached page"
+      'should not call response again for cached page'
     );
     // })
   });
 
-  test("force clearing cache triggers a new fetch", async (assert) => {
+  test('force clearing cache triggers a new fetch', async (assert) => {
     const store = createStore();
     let responseCalls = 0;
     const fetcher = (
@@ -254,7 +250,7 @@ module("Hook | usePaginatedFetcher", () => {
       () =>
         usePaginatedFetcher<string>({
           fetcher,
-          cacheKey: "test-force",
+          cacheKey: 'test-force',
           cachedPagesCache: new Map(),
         }),
       { store }
@@ -273,11 +269,11 @@ module("Hook | usePaginatedFetcher", () => {
       executeAfterSubscribe: () =>
         result.current.loadPage({ page: 2, pageSize: 10 }, undefined, true),
     });
-    assert.equal(responseCalls, 2, "force should bypass cache and fetch again");
+    assert.equal(responseCalls, 2, 'force should bypass cache and fetch again');
     // })
   });
 
-  test("params equality uses cache; params change triggers new fetch", async (assert) => {
+  test('params equality uses cache; params change triggers new fetch', async (assert) => {
     const store = createStore();
     let responseCalls = 0;
     const fetcher = (
@@ -302,7 +298,7 @@ module("Hook | usePaginatedFetcher", () => {
       () =>
         usePaginatedFetcher<number, Record<string, unknown>>({
           fetcher,
-          cacheKey: "test-params",
+          cacheKey: 'test-params',
           cachedPagesCache: new Map(),
         }),
       { store }
@@ -313,7 +309,7 @@ module("Hook | usePaginatedFetcher", () => {
     // await act(async () => {
     await waitForAtomUpdate(store, dataAtom, {
       executeAfterSubscribe: () =>
-        result.current.loadPage({ page: 1, pageSize: 5 }, { q: "same" }),
+        result.current.loadPage({ page: 1, pageSize: 5 }, { q: 'same' }),
     });
     assert.equal(responseCalls, 1);
 
@@ -323,20 +319,20 @@ module("Hook | usePaginatedFetcher", () => {
     // Same params: should use cache
     await waitForAtomUpdate(store, dataAtom, {
       executeAfterSubscribe: () =>
-        result.current.loadPage({ page: 1, pageSize: 5 }, { q: "same" }),
+        result.current.loadPage({ page: 1, pageSize: 5 }, { q: 'same' }),
     });
-    assert.equal(responseCalls, 1, "same params should use cache");
+    assert.equal(responseCalls, 1, 'same params should use cache');
 
     // Different params: should fetch again
     await waitForAtomUpdate(store, dataAtom, {
       executeAfterSubscribe: () =>
-        result.current.loadPage({ page: 1, pageSize: 5 }, { q: "different" }),
+        result.current.loadPage({ page: 1, pageSize: 5 }, { q: 'different' }),
     });
-    assert.equal(responseCalls, 2, "changed params should fetch new page");
+    assert.equal(responseCalls, 2, 'changed params should fetch new page');
     // })
   });
 
-  test("abortRequest triggers abort function and returns correct status", (assert) => {
+  test('abortRequest triggers abort function and returns correct status', (assert) => {
     const store = createStore();
     let aborted = false;
     const TWENTY_MS = 20 as const;
@@ -364,7 +360,7 @@ module("Hook | usePaginatedFetcher", () => {
       () =>
         usePaginatedFetcher<number>({
           fetcher,
-          cacheKey: "test-abort",
+          cacheKey: 'test-abort',
           cachedPagesCache: new Map(),
         }),
       { store }
@@ -381,7 +377,7 @@ module("Hook | usePaginatedFetcher", () => {
     // })
   });
 
-  test("cache TTL expiry: maxPageLifetime=0 forces refetch", async (assert) => {
+  test('cache TTL expiry: maxPageLifetime=0 forces refetch', async (assert) => {
     const store = createStore();
     let responseCalls = 0;
     const fetcher = (
@@ -408,7 +404,7 @@ module("Hook | usePaginatedFetcher", () => {
       () =>
         usePaginatedFetcher<string>({
           fetcher,
-          cacheKey: "test-ttl",
+          cacheKey: 'test-ttl',
           maxPageLifetime: fromSeconds(0),
           cachedPagesCache: new Map(),
         }),
@@ -453,7 +449,7 @@ module("Hook | usePaginatedFetcher", () => {
   const DELAY_FIFTY_MS = 50;
   const TIMEOUT_200_MS = 200;
 
-  test("loadAdjacentPage navigates forward and backward correctly", async (assert) => {
+  test('loadAdjacentPage navigates forward and backward correctly', async (assert) => {
     const store = createStore();
     let responseCalls = 0;
     const fetcher = (
@@ -480,7 +476,7 @@ module("Hook | usePaginatedFetcher", () => {
       () =>
         usePaginatedFetcher<number>({
           fetcher,
-          cacheKey: "test-adjacent",
+          cacheKey: 'test-adjacent',
           cachedPagesCache: new Map(),
         }),
       { store }
@@ -520,7 +516,7 @@ module("Hook | usePaginatedFetcher", () => {
     // })
   });
 
-  test("loadAdjacentPage respects page bounds", async (assert) => {
+  test('loadAdjacentPage respects page bounds', async (assert) => {
     const store = createStore();
     let responseCalls = 0;
     const THREE_ITEMS = 3;
@@ -552,7 +548,7 @@ module("Hook | usePaginatedFetcher", () => {
       () =>
         usePaginatedFetcher<number>({
           fetcher,
-          cacheKey: "test-bounds",
+          cacheKey: 'test-bounds',
           cachedPagesCache: new Map(),
         }),
       { store }
@@ -574,7 +570,7 @@ module("Hook | usePaginatedFetcher", () => {
     assert.equal(
       responseCalls,
       1,
-      "should not fetch when trying to go below page 1"
+      'should not fetch when trying to go below page 1'
     );
 
     // Navigate to last page (3)
@@ -593,12 +589,12 @@ module("Hook | usePaginatedFetcher", () => {
     assert.equal(
       responseCalls,
       2,
-      "should not fetch when trying to go above totalPages"
+      'should not fetch when trying to go above totalPages'
     );
     // })
   });
 
-  test("loadAdjacentPage handles empty totalPages gracefully", async (assert) => {
+  test('loadAdjacentPage handles empty totalPages gracefully', async (assert) => {
     const store = createStore();
     let responseCalls = 0;
     const PAGE_ONE = 1;
@@ -625,7 +621,7 @@ module("Hook | usePaginatedFetcher", () => {
       () =>
         usePaginatedFetcher<number>({
           fetcher,
-          cacheKey: "test-empty",
+          cacheKey: 'test-empty',
           cachedPagesCache: new Map(),
         }),
       { store }
@@ -648,11 +644,11 @@ module("Hook | usePaginatedFetcher", () => {
     result.current.loadAdjacentPage(1, false);
     result.current.loadAdjacentPage(-1, false);
     await sleep(SLEEP_TEN_MS);
-    assert.equal(responseCalls, 1, "should not fetch when totalPages is 0");
+    assert.equal(responseCalls, 1, 'should not fetch when totalPages is 0');
     // })
   });
 
-  test("loadAdjacentPage uses pendingRequestParams when request is in flight", async (assert) => {
+  test('loadAdjacentPage uses pendingRequestParams when request is in flight', async (assert) => {
     const store = createStore();
     let responseCalls = 0;
     const fetcher = (
@@ -680,7 +676,7 @@ module("Hook | usePaginatedFetcher", () => {
       () =>
         usePaginatedFetcher<number>({
           fetcher,
-          cacheKey: "test-pending",
+          cacheKey: 'test-pending',
           cachedPagesCache: new Map(),
         }),
       { store }
@@ -709,20 +705,20 @@ module("Hook | usePaginatedFetcher", () => {
     assert.equal(
       getAtomValue(store, dataAtom).currentPage,
       PAGE_FOUR,
-      "should navigate to page 4 based on pending request"
+      'should navigate to page 4 based on pending request'
     );
-    assert.equal(responseCalls, 2, "should make two requests");
+    assert.equal(responseCalls, 2, 'should make two requests');
 
     const pendingParams = getAtomValue(store, pendingParamsAtom);
     assert.equal(
       pendingParams,
       null,
-      "pendingRequestParams should be null after completion"
+      'pendingRequestParams should be null after completion'
     );
     // })
   });
 
-  test("loadAdjacentPage with forceClearCache bypasses cache", async (assert) => {
+  test('loadAdjacentPage with forceClearCache bypasses cache', async (assert) => {
     const store = createStore();
     let responseCalls = 0;
     const fetcher = (
@@ -749,7 +745,7 @@ module("Hook | usePaginatedFetcher", () => {
       () =>
         usePaginatedFetcher<string>({
           fetcher,
-          cacheKey: "test-force-cache",
+          cacheKey: 'test-force-cache',
           cachedPagesCache: new Map(),
         }),
       { store }
@@ -775,9 +771,9 @@ module("Hook | usePaginatedFetcher", () => {
     await waitForAtomUpdate(store, dataAtom, {
       executeAfterSubscribe: () => result.current.loadAdjacentPage(-1, false),
     });
-    assert.equal(responseCalls, 2, "should use cache for page 1");
+    assert.equal(responseCalls, 2, 'should use cache for page 1');
     let pageData = getAtomValue(store, dataAtom);
-    assert.equal(pageData.items[0], "call-1-page-1", "should show cached data");
+    assert.equal(pageData.items[0], 'call-1-page-1', 'should show cached data');
 
     // Navigate to page 1 again with forceClearCache
     await waitForAtomUpdate(store, dataAtom, {
@@ -787,14 +783,14 @@ module("Hook | usePaginatedFetcher", () => {
     assert.equal(
       responseCalls,
       EXPECTED_CALLS_THREE,
-      "should bypass cache with forceClearCache"
+      'should bypass cache with forceClearCache'
     );
     pageData = getAtomValue(store, dataAtom);
-    assert.equal(pageData.items[0], "call-3-page-2", "should show fresh data");
+    assert.equal(pageData.items[0], 'call-3-page-2', 'should show fresh data');
     // })
   });
 
-  test("pendingRequestParams tracks ongoing requests correctly", async (assert) => {
+  test('pendingRequestParams tracks ongoing requests correctly', async (assert) => {
     const store = createStore();
     const DELAY_THIRTY_MS = 30;
     const THREE_ITEMS = 3;
@@ -822,7 +818,7 @@ module("Hook | usePaginatedFetcher", () => {
       () =>
         usePaginatedFetcher<number, { filter: string }>({
           fetcher,
-          cacheKey: "test-pending-params",
+          cacheKey: 'test-pending-params',
           cachedPagesCache: new Map(),
         }),
       { store }
@@ -834,7 +830,7 @@ module("Hook | usePaginatedFetcher", () => {
     // Start a request
     result.current.loadPage(
       { page: PAGE_TWO, pageSize: PAGE_SIZE_FIFTEEN },
-      { filter: "test" }
+      { filter: 'test' }
     );
 
     // Check that pendingRequestParams is set
@@ -843,7 +839,7 @@ module("Hook | usePaginatedFetcher", () => {
       page: PAGE_TWO,
       pageSize: PAGE_SIZE_FIFTEEN,
     });
-    assert.deepEqual(pendingParams?.params, { filter: "test" });
+    assert.deepEqual(pendingParams?.params, { filter: 'test' });
 
     // Wait for request to complete
     await waitForAtomUpdate(store, pendingParamsAtom, {
@@ -855,12 +851,12 @@ module("Hook | usePaginatedFetcher", () => {
     assert.equal(
       finalPendingParams,
       null,
-      "pendingRequestParams should be null after completion"
+      'pendingRequestParams should be null after completion'
     );
     // })
   });
 
-  test("abortRequest clears pendingRequestParams", (assert) => {
+  test('abortRequest clears pendingRequestParams', (assert) => {
     const store = createStore();
     let aborted = false;
     const THREE_ITEMS = 3;
@@ -878,7 +874,7 @@ module("Hook | usePaginatedFetcher", () => {
         response: async () => {
           await sleep(DELAY_FIFTY_MS);
           if (aborted as boolean) {
-            throw new Error("Request aborted");
+            throw new Error('Request aborted');
           }
           return makePagination(makeItems(THREE_ITEMS), {
             currentPage: paginationArgs.page,
@@ -894,7 +890,7 @@ module("Hook | usePaginatedFetcher", () => {
       () =>
         usePaginatedFetcher<number>({
           fetcher,
-          cacheKey: "test-abort-pending",
+          cacheKey: 'test-abort-pending',
           cachedPagesCache: new Map(),
         }),
       { store }
@@ -908,23 +904,23 @@ module("Hook | usePaginatedFetcher", () => {
 
     // Verify pendingRequestParams is set
     let pendingParams = getAtomValue(store, pendingParamsAtom);
-    assert.notEqual(pendingParams, null, "pendingRequestParams should be set");
+    assert.notEqual(pendingParams, null, 'pendingRequestParams should be set');
 
     // Abort the request
     const didAbort = result.current.abortRequest();
-    assert.equal(didAbort, true, "should successfully abort");
+    assert.equal(didAbort, true, 'should successfully abort');
 
     // Check that pendingRequestParams is cleared
     pendingParams = getAtomValue(store, pendingParamsAtom);
     assert.equal(
       pendingParams,
       null,
-      "pendingRequestParams should be cleared after abort"
+      'pendingRequestParams should be cleared after abort'
     );
     // })
   });
 
-  test("dev invariants: cacheKey and maxPageLifetime are invariant", (assert) => {
+  test('dev invariants: cacheKey and maxPageLifetime are invariant', (assert) => {
     const store = createStore();
 
     const fetcher = (
@@ -945,12 +941,12 @@ module("Hook | usePaginatedFetcher", () => {
     const testValues = {
       defaults: {
         fetcher,
-        cacheKey: "inv-1",
+        cacheKey: 'inv-1',
         maxPageLifetime: fromSeconds(TEN_SECONDS),
         cachedPagesCache: initialCache,
       },
       changed: {
-        cacheKey: "inv-2",
+        cacheKey: 'inv-2',
         maxPageLifetime: fromSeconds(TWENTY_SECONDS),
         cachedPagesCache: changedCache,
       },

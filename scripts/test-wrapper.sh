@@ -2,7 +2,7 @@
 
 # Parse command line arguments for test filtering
 # Usage: sh scripts/test-wrapper.sh badge,button
-# Or: bun run test -- badge,button
+# Or: bun run test:client -- badge,button
 
 export TEST_FILTER="$1"
 
