@@ -10,6 +10,7 @@ import {
   SparklesIcon,
   Squares2X2Icon,
   StarIcon,
+  TableCellsIcon,
 } from '@heroicons/react/24/outline';
 import {
   BeakerIcon as BeakerIconSolid,
@@ -23,6 +24,7 @@ import {
   SparklesIcon as SparklesIconSolid,
   Squares2X2Icon as Squares2X2IconSolid,
   StarIcon as StarIconSolid,
+  TableCellsIcon as TableCellsIconSolid,
 } from '@heroicons/react/24/solid';
 import { Link, useLocation } from '@tanstack/react-router';
 import {
@@ -111,6 +113,12 @@ const devItems = [
     url: '/demo/editable-list',
     iconDefault: ListBulletIcon,
     iconActive: ListBulletIconSolid,
+  },
+  {
+    title: 'Data Table',
+    url: '/demo/data-table',
+    iconDefault: TableCellsIcon,
+    iconActive: TableCellsIconSolid,
   },
 ];
 

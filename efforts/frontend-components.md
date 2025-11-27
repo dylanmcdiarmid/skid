@@ -31,10 +31,10 @@ It should also have a display option for showing `Page 2 of 99` beneath it.
 
 The pagination component should have different disable modes. One is for if we are changing the list (so the pages are likely to change), the other is if we are just changing a page in the same set (the pages are unlikely to change). If we know the page amount won't change, we can let the user click a different page even when their current request is loading.
 
-# Data table planning query
-I'd like you to help me spec a data table component.
+# Data table component
+I'd like to make a lightweight data table component. We want the data table to accept a clear data structure that defines
 
-As far as fetching data, I have a react hook that helps pull in the correct data in a paginated form, and also helps with caching. Data will always be considered "server-side", even though in related sometimes it will be retrieved from a local cache.
+As far as fetching data, I have a react hook that helps pull in the correct data in a paginated form, and also helps with caching. Data will always be considered "server-side", even though sometimes it will be retrieved from a local cache.
 
 For design, it should be utilitarian. We have full access to ShadCN components and should use them where appropriate (although we do not want to use their data table, as it uses Tanstack Table which is overkill for our needs). I'd like you to think about what ShadCN components we should use, if any, or if it's better just to use vanilla components ane style them with tailwind.
 
@@ -47,9 +47,29 @@ Here's the features I'd like more help specifying
 - Optional support for expanding a row. An expanded row can show an element that is not a "part" of the table (so it could show an image or whatever really)
 - Two different ways to "select" a row. One way is more of a "focus", where the user's keyboard input can do things to the row, like trigger expanding it. The second way is for batch processing, more of a "checkbox" select.
 
-I'd like you to help plan out in Typescript what data structures the wrapper should accept as the "simpler" interface to TanStack, and then maybe how this simpler interface would translate into TanStack structures.
+The component that triggers loading a new page will be separate from the data table so we can re-use it for views that don't need the data table. 
 
-The component that triggers loading a new page will be separate from the data table so we can re-use it for views that don't need the data table. I know Tanstack has pagination built in, will we need to integrate with that at all or can we just manage it separately?
+Decide where we need to 
+- install new shadcn component (may not be needed)
+- use existing components (listed in client/src/components/ui) 
+- can just use vanilla components
+
+If we need to install a new shadcn component, use `bunx shadcn add foo`. Style with tailwind.
+
+## Pagination Component
+Pagination component should show a previous button, then page numbers (truncated). If we detect we are truncating.
+It should also have a display option for showing `Page 2 of 99` beneath it.
+`[<] [1] [*2*] [3] [...] [99] [>]`
+
+The pagination component should have different disable modes. One is for if we are changing the list (so the pages are likely to change), the other is if we are just changing a page in the same set (the pages are unlikely to change). If we know the page amount won't change, we can let the user click a different page even when their current request is loading.
+
+## Clarifications
+1. We can use Jotai where appropriate for state management.
+2. Table should operate in "controlled" mode and emit events, rather than owning state like searchQuery or sortColumn. We may want to establish jotai atoms along with a small API for managing them help the parent manage the state.
+3. Focus should be transient (up and down arrow move focus down and up). Clicking outside the table should clear focus. Escape should clear focus. focusOnClick option is on by default. selectOnClick option is off by default. If a row is expandable and "expandOnClick" is set, then clicking expands the row. All 3 of those options can be on at the same time. If "expandOnClick" is not on, we should show a chevron for expanding the row by default.
+4. For columns, we prefer a Configuration Object approach (passing an array of column definitions)
+5. For intermediate loading states a spinner with a "dim" is fine.
+
 
 # Drag/drop sortable list
 - Should use dnd-kit and shadcn. dnd-kit will need to be added. Anything from the shadcn library can also be installed

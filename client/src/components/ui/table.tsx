@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 function Table({ className, ...props }: React.ComponentProps<"table">) {
   return (
     <div
-      className="relative h-full w-full overflow-scroll bg-neutral-50"
+      className="relative h-full w-full overflow-scroll bg-surface-sunken"
       data-slot="table-container"
     >
       <table
@@ -20,7 +20,7 @@ function Table({ className, ...props }: React.ComponentProps<"table">) {
 function TableHeader({ className, ...props }: React.ComponentProps<"thead">) {
   return (
     <thead
-      className={cn("bg-gray-100 [&_tr]:border-b", className)}
+      className={cn("bg-surface-elevated [&_tr]:border-b", className)}
       data-slot="table-header"
       {...props}
     />
@@ -30,7 +30,7 @@ function TableHeader({ className, ...props }: React.ComponentProps<"thead">) {
 function TableBody({ className, ...props }: React.ComponentProps<"tbody">) {
   return (
     <tbody
-      className={cn("bg-white", className)}
+      className={cn("bg-bg-surface", className)}
       data-slot="table-body"
       {...props}
     />
@@ -67,7 +67,7 @@ function TableHead({ className, ...props }: React.ComponentProps<"th">) {
   return (
     <th
       className={cn(
-        "sticky top-0 z-10 h-10 whitespace-nowrap bg-gray-100 px-2 text-left align-middle font-medium text-foreground [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
+        "sticky top-0 z-10 h-10 whitespace-nowrap bg-surface-elevated px-2 text-left align-middle font-medium text-foreground [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
         className
       )}
       data-slot="table-head"

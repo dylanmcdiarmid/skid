@@ -57,6 +57,17 @@
 
   --action-link: oklch(0.55 0.15 252.8);
 
+  /* Semantic interaction tokens */
+  --hover-subtle: oklch(0.96 0 0);
+  --hover-muted: oklch(0.92 0 0);
+  --focus-ring: var(--brand-blue);
+  --overlay-bg: oklch(1 0 0 / 50%);
+  --surface-elevated: oklch(0.98 0 0);
+  --surface-sunken: oklch(0.97 0.002 60);
+  --text-muted: oklch(0.556 0 0);
+  --text-placeholder: oklch(0.658 0 0);
+  --icon-muted: oklch(0.556 0 0);
+
   --background: var(--bg-app);
   --foreground: var(--text-primary);
   --card: var(--bg-surface);
@@ -193,12 +204,21 @@ h1 {
   --color-sidebar-icon-active: var(--sidebar-icon-active);
   --color-sidebar-icon-inactive: var(--sidebar-icon-inactive);
   --color-sidebar-hover: var(--sidebar-hover);
+  --color-hover-subtle: var(--hover-subtle);
+  --color-hover-muted: var(--hover-muted);
+  --color-focus-ring: var(--focus-ring);
+  --color-overlay-bg: var(--overlay-bg);
+  --color-surface-elevated: var(--surface-elevated);
+  --color-surface-sunken: var(--surface-sunken);
+  --color-text-muted: var(--text-muted);
+  --color-text-placeholder: var(--text-placeholder);
+  --color-icon-muted: var(--icon-muted);
 }
 
 .dark {
   --bg-app: oklch(0.145 0 0);
   --bg-surface: oklch(0.205 0 0);
-  --border-default: oklch(0.2265 0.0084 223.85 / 15%);
+  --border-default: oklch(1 0 0 / 12%);
   --text-primary: oklch(0.985 0 0);
   --text-secondary: oklch(0.708 0 0);
   --text-disabled: oklch(0.556 0 0);
@@ -230,6 +250,17 @@ h1 {
   --badge-gray: oklch(70.7% 0.022 261.325);
 
   --action-link: oklch(0.6 0.15 252.8);
+
+  /* Semantic interaction tokens (dark mode) */
+  --hover-subtle: oklch(0.25 0 0);
+  --hover-muted: oklch(0.32 0 0);
+  --focus-ring: var(--brand-blue);
+  --overlay-bg: oklch(0.1 0 0 / 50%);
+  --surface-elevated: oklch(0.25 0 0);
+  --surface-sunken: oklch(0.18 0 0);
+  --text-muted: oklch(0.556 0 0);
+  --text-placeholder: oklch(0.5 0 0);
+  --icon-muted: oklch(0.556 0 0);
 
   --background: var(--bg-app);
   --foreground: var(--text-primary);

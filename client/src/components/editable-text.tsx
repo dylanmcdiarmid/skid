@@ -157,7 +157,7 @@ export function EditableText({
     onBlur: handleBlur,
     placeholder,
     'aria-label': ariaLabel ?? 'Edit text',
-    className: `w-full rounded border border-brand-accent bg-white px-2 py-1 text-sm outline-none ring-2 ring-brand-accent/20 focus:ring-brand-accent/40 dark:bg-neutral-900 ${inputClassName}`,
+    className: `w-full rounded border border-brand-accent bg-bg-surface px-2 py-1 text-sm outline-none ring-2 ring-brand-accent/20 focus:ring-brand-accent/40 ${inputClassName}`,
   };
 
   if (isEditing) {
@@ -186,7 +186,7 @@ export function EditableText({
   return (
     <button
       aria-label={ariaLabel ?? 'Click to edit'}
-      className={`w-full cursor-pointer rounded px-2 py-1 text-left transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-800 ${disabled ? 'cursor-not-allowed opacity-50' : ''} ${className}`}
+      className={`w-full cursor-pointer rounded px-2 py-1 text-left transition-colors hover:bg-hover-subtle ${disabled ? 'cursor-not-allowed opacity-50' : ''} ${className}`}
       disabled={disabled}
       onClick={handleDisplayClick}
       onKeyDown={handleDisplayKeyDown}
@@ -194,7 +194,7 @@ export function EditableText({
       type="button"
     >
       <DisplayWrapper sourceText={displayText}>
-        <span className={isEmpty ? 'text-neutral-400 italic' : ''}>
+        <span className={isEmpty ? 'text-text-placeholder italic' : ''}>
           {displayText}
         </span>
       </DisplayWrapper>

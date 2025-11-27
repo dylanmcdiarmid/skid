@@ -68,5 +68,7 @@ Often we will just return the basic row types from our DAO methods, but this als
 ## 10. Branding
 We use a brand accent color of a green that looks good on light or dark backgrounds. We can use `border-brand-accent`, `ring-brand-accent`, and other tailwind color classes where appropriate.
 
+We should always support dark mode alternatives, as this app can run in light mode or dark mode.
+
 ## 11. Client Side Assets
 We use Elysia's static plugin to serve assets. The route should always start with '/assets', e.g. '/assets/css/dev/bundle.css'

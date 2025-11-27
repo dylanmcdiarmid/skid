@@ -319,7 +319,7 @@ export function SortableList<T extends { id: string }>({
       {showAddButton && (
         <div className="mt-2">
           <button
-            className="flex w-full items-center justify-center rounded-md border-2 border-neutral-200 border-dashed py-3 font-medium text-neutral-500 text-sm transition-colors hover:border-brand-accent hover:text-brand-accent dark:border-neutral-800 dark:hover:border-brand-accent"
+            className="flex w-full items-center justify-center rounded-md border-2 border-border border-dashed py-3 font-medium text-muted-foreground text-sm transition-colors hover:border-brand-accent hover:text-brand-accent"
             onClick={onAdd}
             type="button"
           >

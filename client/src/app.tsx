@@ -10,10 +10,12 @@ import { useAtomValue, useSetAtom } from 'jotai';
 import { useEffect } from 'react';
 import { toast } from 'sonner';
 import { AppSidebar } from '@/components/app-sidebar';
+import { ThemeProvider } from '@/components/theme-provider';
 import { TopBar } from '@/components/top-bar';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { Toaster } from '@/components/ui/sonner';
 import DayTemplates from './pages/day-templates';
+import DemoDataTable from './pages/demo-data-table';
 import DemoEditableList from './pages/demo-editable-list';
 import DemoEditableText from './pages/demo-editable-text';
 import DemoSortableList from './pages/demo-sortable-list';
@@ -63,6 +65,9 @@ const PAGE_TITLES: Record<string, { title: string }> = {
   '/demo/editable-list': {
     title: 'Editable List Demo',
   },
+  '/demo/data-table': {
+    title: 'Data Table Demo',
+  },
 };
 
 function RootLayout() {
@@ -82,18 +87,20 @@ function RootLayout() {
   }, [notifications, removeNotification]);
 
   return (
-    <SidebarProvider>
-      <AppSidebar />
-      <Toaster closeButton richColors />
-      <main className="flex h-svh w-full min-w-0 flex-1 flex-col bg-bg-app">
-        <TopBar title={pageInfo.title} />
-        <div className="min-h-0 min-w-0 flex-1">
-          <div className="h-full min-h-0 min-w-0 p-4">
-            <Outlet />
+    <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
+      <SidebarProvider>
+        <AppSidebar />
+        <Toaster closeButton richColors />
+        <main className="flex min-h-svh w-full min-w-0 flex-1 flex-col bg-bg-app">
+          <TopBar title={pageInfo.title} />
+          <div className="min-w-0 flex-1">
+            <div className="min-h-full min-w-0 p-4">
+              <Outlet />
+            </div>
           </div>
-        </div>
-      </main>
-    </SidebarProvider>
+        </main>
+      </SidebarProvider>
+    </ThemeProvider>
   );
 }
 
@@ -161,6 +168,11 @@ const routeTree = rootRoute.addChildren([
     getParentRoute: () => rootRoute,
     path: '/demo/editable-list',
     component: DemoEditableList,
+  }),
+  createRoute({
+    getParentRoute: () => rootRoute,
+    path: '/demo/data-table',
+    component: DemoDataTable,
   }),
 ]);
 

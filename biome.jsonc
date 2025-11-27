@@ -15,7 +15,9 @@
       "style": {
         "noMagicNumbers": "off",
         "noDoneCallback": "off",
-        "noParameterProperties": "off"
+        "noParameterProperties": "off",
+        "noNonNullAssertion": "off",
+        "useBlockStatements": "error"
       },
       "complexity": {
         "noExcessiveCognitiveComplexity": "off"
