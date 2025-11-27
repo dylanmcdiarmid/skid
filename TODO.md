@@ -1,3 +1,8 @@
+# Random
+- [x] Add accent color
+- [ ] Add logo instead of star
+
+# Main
 - [x] Copy client information from hcs
 - [x] Integrate ultracite/biome
 - [x] Add elysia

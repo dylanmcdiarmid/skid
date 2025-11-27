@@ -11,7 +11,7 @@ const MarkdownBoldWrapper = ({ sourceText }: { sourceText: string }) => {
       {parts.map((part, index) => {
         if (part.startsWith('**') && part.endsWith('**')) {
           return (
-            <strong className="font-bold text-amber-600" key={index}>
+            <strong className="font-bold text-brand-accent" key={index}>
               {part.slice(2, -2)}
             </strong>
           );

@@ -13,9 +13,11 @@ const jsGlobals: IndexGlobals = {
 const getSpaHtml = () => {
   const cacheBust = isDev ? `?t=${Date.now()}` : '';
   const cssBundle = isDev
-    ? `/css/dev/bundle.css${cacheBust}`
-    : '/css/bundle.css';
-  const jsBundle = isDev ? `/js/dev/bundle.js${cacheBust}` : '/js/bundle.js';
+    ? `/assets/css/dev/bundle.css${cacheBust}`
+    : '/assets/css/bundle.css';
+  const jsBundle = isDev
+    ? `/assets/js/dev/bundle.js${cacheBust}`
+    : '/assets/js/bundle.js';
 
   return `<!DOCTYPE html>${renderToString(
     <HtmlBase cssBundle={cssBundle} jsBundle={jsBundle} jsGlobals={jsGlobals} />
@@ -23,7 +25,7 @@ const getSpaHtml = () => {
 };
 
 const app = new Elysia()
-  .use(staticPlugin({ prefix: '/' }))
+  .use(staticPlugin({ prefix: '/assets' }))
   .get('/', ({ set }) => {
     set.headers['Content-Type'] = 'text/html; charset=utf-8';
     return getSpaHtml();

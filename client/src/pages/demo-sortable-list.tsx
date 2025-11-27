@@ -21,7 +21,7 @@ const DemoItem = ({
   dragHandleProps: DragHandleProps;
 }) => {
   return (
-    <div className="mb-2 flex items-center gap-4 rounded-md border bg-white p-3 shadow-sm transition-colors hover:border-amber-500/50 dark:bg-neutral-900">
+    <div className="mb-2 flex items-center gap-4 rounded-md border bg-white p-3 shadow-sm transition-colors hover:border-brand-accent/50 dark:bg-neutral-900">
       <button
         {...dragHandleProps.attributes}
         {...dragHandleProps.listeners}

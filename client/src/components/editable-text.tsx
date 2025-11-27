@@ -81,17 +81,23 @@ export function EditableText({
     }
     setIsEditing(true);
     setEditValue(sourceText);
-    onEditStart?.();
+    if (onEditStart) {
+      onEditStart();
+    }
+    return;
   }, [disabled, sourceText, onEditStart]);
 
   const saveEdit = useCallback(() => {
     setIsEditing(false);
     if (editValue !== sourceText) {
       onEditComplete?.(editValue);
+    } else {
+      onEditCancel?.();
     }
-  }, [editValue, sourceText, onEditComplete]);
+  }, [editValue, sourceText, onEditComplete, onEditCancel]);
 
   const cancelEdit = useCallback(() => {
+    console.log('cancelling edit');
     setIsEditing(false);
     setEditValue(sourceText);
     onEditCancel?.();
@@ -151,7 +157,7 @@ export function EditableText({
     onBlur: handleBlur,
     placeholder,
     'aria-label': ariaLabel ?? 'Edit text',
-    className: `w-full rounded border border-amber-500 bg-white px-2 py-1 text-sm outline-none ring-2 ring-amber-500/20 focus:ring-amber-500/40 dark:bg-neutral-900 ${inputClassName}`,
+    className: `w-full rounded border border-brand-accent bg-white px-2 py-1 text-sm outline-none ring-2 ring-brand-accent/20 focus:ring-brand-accent/40 dark:bg-neutral-900 ${inputClassName}`,
   };
 
   if (isEditing) {

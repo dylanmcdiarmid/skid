@@ -14,6 +14,7 @@ import { TopBar } from '@/components/top-bar';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { Toaster } from '@/components/ui/sonner';
 import DayTemplates from './pages/day-templates';
+import DemoEditableList from './pages/demo-editable-list';
 import DemoEditableText from './pages/demo-editable-text';
 import DemoSortableList from './pages/demo-sortable-list';
 import GeneratorHistory from './pages/generator-history';
@@ -58,6 +59,9 @@ const PAGE_TITLES: Record<string, { title: string }> = {
   },
   '/demo/editable-text': {
     title: 'Editable Text Demo',
+  },
+  '/demo/editable-list': {
+    title: 'Editable List Demo',
   },
 };
 
@@ -152,6 +156,11 @@ const routeTree = rootRoute.addChildren([
     getParentRoute: () => rootRoute,
     path: '/demo/editable-text',
     component: DemoEditableText,
+  }),
+  createRoute({
+    getParentRoute: () => rootRoute,
+    path: '/demo/editable-list',
+    component: DemoEditableList,
   }),
 ]);
 

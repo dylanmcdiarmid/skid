@@ -64,3 +64,9 @@ Business logic should always be called through Data Access Objects. These are si
 DAOs live in ./src/daos. If a dao method needs to access another dao, it can import that dao and instantiate it within the method, passing in it's own db.
 
 Often we will just return the basic row types from our DAO methods, but this also gives us a place to convert one or more database types into something more appropriate.
+
+## 10. Branding
+We use a brand accent color of a green that looks good on light or dark backgrounds. We can use `border-brand-accent`, `ring-brand-accent`, and other tailwind color classes where appropriate.
+
+## 11. Client Side Assets
+We use Elysia's static plugin to serve assets. The route should always start with '/assets', e.g. '/assets/css/dev/bundle.css'
