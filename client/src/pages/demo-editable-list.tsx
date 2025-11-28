@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { EditableText } from '@/components/editable-text';
+import { ClickableSeamlessEditor } from '@/components/clickable-seamless-editor';
 import {
   generateNewItemId,
   type ItemControlProps,
@@ -70,7 +70,7 @@ const EditableListItem = ({
       </button>
 
       <div className="flex-1">
-        <EditableText
+        <ClickableSeamlessEditor
           className="hover:bg-neutral-100 dark:hover:bg-neutral-800"
           onEditCancel={onEditEnd}
           onEditComplete={(text) => {

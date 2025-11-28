@@ -1,5 +1,7 @@
-import type { Kysely } from 'kysely';
-import type { DB } from '../types/db';
+import type { Kysely, Selectable } from 'kysely';
+import type { DB, PlanningItems } from '../types/db';
+
+export type PlanningItem = Selectable<PlanningItems>;
 
 export class PlanningDAO {
   constructor(private readonly db: Kysely<DB>) {}
@@ -8,7 +10,7 @@ export class PlanningDAO {
     display: string;
     notes?: string;
     min_day_instance_id?: string;
-  }) {
+  }): Promise<PlanningItem> {
     const id = crypto.randomUUID();
     return this.db
       .insertInto('planning_items')
@@ -22,7 +24,7 @@ export class PlanningDAO {
       .executeTakeFirstOrThrow();
   }
 
-  async listActive(asOfDate: string) {
+  async listActive(asOfDate: string): Promise<PlanningItem[]> {
     return this.db
       .selectFrom('planning_items')
       .selectAll()
@@ -38,7 +40,7 @@ export class PlanningDAO {
       .execute();
   }
 
-  async get(id: string) {
+  async get(id: string): Promise<PlanningItem | undefined> {
     return this.db
       .selectFrom('planning_items')
       .selectAll()
@@ -55,7 +57,7 @@ export class PlanningDAO {
       was_rejected?: number;
       completed_at?: number | null;
     }
-  ) {
+  ): Promise<PlanningItem | undefined> {
     return this.db
       .updateTable('planning_items')
       .set({ ...updates, updated_at: Math.floor(Date.now() / 1000) })
@@ -64,19 +66,22 @@ export class PlanningDAO {
       .executeTakeFirst();
   }
 
-  async snooze(id: string, untilDate: string) {
+  async snooze(
+    id: string,
+    untilDate: string
+  ): Promise<PlanningItem | undefined> {
     return this.update(id, { min_day_instance_id: untilDate });
   }
 
-  async reject(id: string) {
+  async reject(id: string): Promise<PlanningItem | undefined> {
     return this.update(id, { was_rejected: 1 });
   }
 
-  async complete(id: string) {
+  async complete(id: string): Promise<PlanningItem | undefined> {
     return this.update(id, { completed_at: Math.floor(Date.now() / 1000) });
   }
 
-  async delete(id: string) {
+  async delete(id: string): Promise<{ numDeletedRows: bigint } | undefined> {
     return this.db
       .deleteFrom('planning_items')
       .where('id', '=', id)

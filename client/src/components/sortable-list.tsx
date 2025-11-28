@@ -37,6 +37,7 @@ export interface ItemControlProps {
   listeners: any;
   ref: (element: HTMLElement | null) => void;
   onDelete?: () => void;
+  isHovered?: boolean;
 }
 
 // Backwards compatibility alias
@@ -61,6 +62,7 @@ interface SortableListProps<T extends { id: string }> {
   onRemove?: (id: string) => void;
   showAddButton?: boolean;
   addButtonLabel?: string;
+  addButtonVariant?: 'default' | 'hover-bottom';
   onAdd?: () => void;
 }
 
@@ -80,12 +82,10 @@ interface SortableItemProps<T> {
   onDelete?: () => void;
 }
 
-function SortableItem<T extends { id: string }>({
+function SortableItemWithHover<T extends { id: string }>({
   item,
   renderItem,
   WrapperComponent,
-  onMouseEnter,
-  onMouseLeave,
   onDelete,
 }: SortableItemProps<T>) {
   const {
@@ -95,18 +95,23 @@ function SortableItem<T extends { id: string }>({
     setActivatorNodeRef,
     transform,
     transition,
+    isDragging,
   } = useSortable({ id: item.id });
+
+  const [isHovered, setIsHovered] = useState(false);
 
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
+    zIndex: isDragging ? 1 : undefined,
+    position: 'relative' as const,
   };
 
   return (
     <WrapperComponent
       data-item-id={item.id}
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       ref={setNodeRef}
       style={style}
     >
@@ -115,6 +120,7 @@ function SortableItem<T extends { id: string }>({
         listeners,
         ref: setActivatorNodeRef,
         onDelete,
+        isHovered: isHovered || isDragging,
       })}
     </WrapperComponent>
   );
@@ -158,10 +164,11 @@ export function SortableList<T extends { id: string }>({
   onRemove,
   showAddButton = false,
   addButtonLabel = 'Add Item',
+  addButtonVariant,
   onAdd,
 }: SortableListProps<T>) {
   const [, setSortableItems] = useAtom(sortableListDataAtom);
-  const [hoveredItemId, setHoveredItemId] = useState<string | null>(null);
+  const [hoveredItemId, _setHoveredItemId] = useState<string | null>(null);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -289,7 +296,7 @@ export function SortableList<T extends { id: string }>({
         >
           <div>
             {items.map((item) => (
-              <SortableItem
+              <SortableItemWithHover
                 item={item}
                 key={item.id}
                 onDelete={
@@ -299,16 +306,6 @@ export function SortableList<T extends { id: string }>({
                     ? () => onRemove(item.id)
                     : undefined
                 }
-                onMouseEnter={
-                  keyboardShortcutsDisabled
-                    ? undefined
-                    : () => setHoveredItemId(item.id)
-                }
-                onMouseLeave={
-                  keyboardShortcutsDisabled
-                    ? undefined
-                    : () => setHoveredItemId(null)
-                }
                 renderItem={renderItem}
                 WrapperComponent={WrapperComponent}
               />
@@ -316,15 +313,35 @@ export function SortableList<T extends { id: string }>({
           </div>
         </SortableContext>
       </DndContext>
-      {showAddButton && (
-        <div className="mt-2">
+      {showAddButton &&
+        (!addButtonVariant || addButtonVariant === 'default') && (
+          <div className="mt-2">
+            <button
+              className="flex w-full items-center justify-center rounded-md border-2 border-border border-dashed py-3 font-medium text-muted-foreground text-sm transition-colors hover:border-brand-accent hover:text-brand-accent"
+              onClick={onAdd}
+              type="button"
+            >
+              <span className="mr-2">+</span>
+              {addButtonLabel}
+            </button>
+          </div>
+        )}
+
+      {showAddButton && addButtonVariant === 'hover-bottom' && (
+        // This wrapper is needed to only trigger hover state when actually hovering the button area
+        // The previous implementation triggered when hovering the parent container because of how group/group-hover works
+        // We use group/add to scope the hover effect specifically to this container
+        <div className="group/add relative mt-1">
           <button
-            className="flex w-full items-center justify-center rounded-md border-2 border-border border-dashed py-3 font-medium text-muted-foreground text-sm transition-colors hover:border-brand-accent hover:text-brand-accent"
+            aria-label={addButtonLabel}
+            className="relative flex w-full cursor-pointer items-center justify-center py-1 outline-none"
             onClick={onAdd}
             type="button"
           >
-            <span className="mr-2">+</span>
-            {addButtonLabel}
+            <div className="absolute right-0 left-0 h-px bg-border/50 opacity-0 transition-opacity group-hover/add:opacity-100" />
+            <div className="z-10 flex h-5 w-5 items-center justify-center rounded-full border bg-background opacity-0 shadow-sm transition-opacity group-hover/add:opacity-100">
+              <span className="text-[10px] text-muted-foreground">+</span>
+            </div>
           </button>
         </div>
       )}

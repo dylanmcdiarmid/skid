@@ -1,0 +1,4 @@
+---
+alwaysApply: true
+---
+Both client and server side of this app uses bun. Always use bun or bunx instead of npm or npmx.

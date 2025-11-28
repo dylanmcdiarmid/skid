@@ -53,7 +53,9 @@ The "Planning" screen acts as a brain dump/inbox to prevent cognitive load durin
 ## 7. Testing
 Use 'bun:test' for testing. src/testutils.ts has a createTestDb function that allows us to use in-memory databases to test with. If you see we're missing a utility that will likely be used more than once, add it to testutils.
 
-Tests should be next to the file they are testing, e.g. foo.ts gets foo.test.ts
+Tests should be next to the file they are testing, e.g. foo.ts gets foo.test.ts.
+
+To test the server code, run `bun run test:server`
 
 ## 8. API
 When writing an API, we should use Elysia's Eden Treaty. We should always use TypeBox, not zod.

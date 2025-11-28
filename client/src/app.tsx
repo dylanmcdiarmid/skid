@@ -14,7 +14,8 @@ import { ThemeProvider } from '@/components/theme-provider';
 import { TopBar } from '@/components/top-bar';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { Toaster } from '@/components/ui/sonner';
-import DayTemplates from './pages/day-templates';
+import DayTemplateEditorPage from './pages/day-templates/editor';
+import DayTemplateList from './pages/day-templates/list';
 import DemoDataTable, {
   demoTableSearchValidator,
 } from './pages/demo-data-table';
@@ -132,7 +133,12 @@ const routeTree = rootRoute.addChildren([
   createRoute({
     getParentRoute: () => rootRoute,
     path: '/templates/days',
-    component: DayTemplates,
+    component: DayTemplateList,
+  }),
+  createRoute({
+    getParentRoute: () => rootRoute,
+    path: '/templates/days/$templateId',
+    component: DayTemplateEditorPage,
   }),
   createRoute({
     getParentRoute: () => rootRoute,

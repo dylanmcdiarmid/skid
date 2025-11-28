@@ -4,7 +4,7 @@ import { PencilIcon, TrashIcon } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
-import { type Generator, mockGeneratorStore } from '@/api/generators';
+import { type Generator, generatorStore } from '@/api/generators';
 import { DataTable } from '@/components/data-table/data-table';
 import { Pagination } from '@/components/data-table/pagination';
 import { SearchInput } from '@/components/data-table/search-input';
@@ -38,7 +38,7 @@ const generatorFetcher = (
   return {
     abort: () => true, // Not implemented for mock
     response: async (): Promise<PaginationType<Generator>> => {
-      return mockGeneratorStore.list(pagArgs, {
+      return generatorStore.list(pagArgs, {
         search: params?.search,
         sortId: params?.sort?.columnId || undefined,
         sortDir: params?.sort?.direction || undefined,
@@ -144,7 +144,7 @@ export function GeneratorList({
 
     setIsDeleting(true);
     try {
-      const result = await mockGeneratorStore.delete(deleteId);
+      const result = await generatorStore.delete(deleteId);
       if (result.success) {
         toast.success('Generator deleted');
         setDeletedIds((prev) => {

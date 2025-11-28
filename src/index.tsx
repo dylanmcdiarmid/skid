@@ -2,6 +2,7 @@ import { staticPlugin } from '@elysiajs/static';
 import { Elysia } from 'elysia';
 import { renderToString } from 'react-dom/server';
 import type { IndexGlobals } from '@/client/lib/globals';
+import { api } from './api';
 import { HtmlBase } from './html';
 
 const isDev = process.env.NODE_ENV === 'development';
@@ -26,14 +27,14 @@ const getSpaHtml = () => {
 
 const app = new Elysia()
   .use(staticPlugin({ prefix: '/assets' }))
+  .use(api)
   .get('/', ({ set }) => {
     set.headers['Content-Type'] = 'text/html; charset=utf-8';
     return getSpaHtml();
   })
-  .onError(({ code, set, path }) => {
-    // Serve SPA for 404s on non-API routes
-    if (code === 'NOT_FOUND' && !path.startsWith('/api')) {
-      set.status = 200;
+  .get('/*', ({ set, path }) => {
+    // Only serve SPA for non-asset routes
+    if (!path.startsWith('/assets')) {
       set.headers['Content-Type'] = 'text/html; charset=utf-8';
       return getSpaHtml();
     }

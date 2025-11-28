@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { EditableText } from '@/components/editable-text';
+import { ClickableSeamlessEditor } from '@/components/clickable-seamless-editor';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 // Custom display wrapper that renders markdown-like bold text
@@ -65,7 +65,7 @@ export default function DemoEditableText() {
           <CardTitle>Simple Text</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <EditableText
+          <ClickableSeamlessEditor
             sourceText={simpleText}
             onEditComplete={(text) => {
               setSimpleText(text);
@@ -92,7 +92,7 @@ export default function DemoEditableText() {
             The display wrapper renders **text** as bold, but you edit the raw
             markdown.
           </p>
-          <EditableText
+          <ClickableSeamlessEditor
             sourceText={markdownText}
             DisplayWrapper={MarkdownBoldWrapper}
             onEditComplete={(text) => {
@@ -114,7 +114,7 @@ export default function DemoEditableText() {
           <CardTitle>As Heading</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <EditableText
+          <ClickableSeamlessEditor
             sourceText={headingText}
             DisplayWrapper={HeadingWrapper}
             onEditComplete={(text) => {
@@ -134,7 +134,7 @@ export default function DemoEditableText() {
           <p className="text-muted-foreground text-sm">
             Use Shift+Enter for line breaks, Enter to save.
           </p>
-          <EditableText
+          <ClickableSeamlessEditor
             sourceText={multiLineText}
             multiLine
             DisplayWrapper={SubtleWrapper}
@@ -157,7 +157,7 @@ export default function DemoEditableText() {
           <CardTitle>Disabled State</CardTitle>
         </CardHeader>
         <CardContent>
-          <EditableText
+          <ClickableSeamlessEditor
             sourceText="This text cannot be edited"
             disabled
           />
@@ -170,7 +170,7 @@ export default function DemoEditableText() {
           <CardTitle>Empty with Placeholder</CardTitle>
         </CardHeader>
         <CardContent>
-          <EditableText
+          <ClickableSeamlessEditor
             sourceText=""
             placeholder="Click to add a description..."
             onEditComplete={(text) => logEvent(`Added description: "${text}"`)}

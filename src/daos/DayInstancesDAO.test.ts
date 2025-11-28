@@ -155,4 +155,111 @@ describe('DayInstancesDAO', () => {
     expect(values).toHaveLength(1);
     expect(values[0].display_value).toBe('C# Minor');
   });
+
+  it('should create day instance from template', async () => {
+    // Setup template data
+    const templateId = 'template-1';
+    const sessionTemplateId = 'session-template-1';
+    const lineItemTemplateId = 'line-item-template-1';
+
+    await db.insertInto('day_templates').values({
+        id: templateId,
+        display: 'Test Template',
+        created_at: Math.floor(Date.now() / 1000),
+    }).execute();
+
+    await db.insertInto('practice_session_templates').values({
+        id: sessionTemplateId,
+        display: 'Session Template',
+        unique_name: 'session-1',
+        default_recommended_time_minutes: 10,
+        created_at: Math.floor(Date.now() / 1000),
+    }).execute();
+
+    await db.insertInto('day_template_items').values({
+        id: 'dti-1',
+        day_template_id: templateId,
+        practice_session_template_id: sessionTemplateId,
+        sort_order: 0,
+    }).execute();
+
+    await db.insertInto('practice_session_line_items').values({
+        id: lineItemTemplateId,
+        practice_session_template_id: sessionTemplateId,
+        display: 'Line Item Template',
+        sort_order: 0,
+        created_at: Math.floor(Date.now() / 1000),
+    }).execute();
+
+    // Execute
+    const date = '2023-11-01';
+    const dayInstance = await dao.createFromTemplate(date, templateId);
+
+    // Verify
+    expect(dayInstance).toBeDefined();
+    expect(dayInstance.id).toBe(date);
+    expect(dayInstance.source_day_template_id).toBe(templateId);
+
+    const sessions = await dao.getSessionsForDay(date);
+    expect(sessions).toHaveLength(1);
+    expect(sessions[0].display).toBe('Session Template');
+    expect(sessions[0].practice_session_template_id).toBe(sessionTemplateId);
+
+    const lineItems = await dao.getLineItemsForSession(sessions[0].id);
+    expect(lineItems).toHaveLength(1);
+    expect(lineItems[0].display).toBe('Line Item Template');
+    expect(lineItems[0].source_line_item_id).toBe(lineItemTemplateId);
+  });
+
+  it('should handle templates with generators safely', async () => {
+    const templateId = 'template-gen';
+    const sessionTemplateId = 'session-template-gen';
+    const generatorId = 'gen-1';
+
+    await db.insertInto('day_templates').values({
+        id: templateId,
+        display: 'Template with Generator',
+        created_at: Math.floor(Date.now() / 1000),
+    }).execute();
+
+    await db.insertInto('practice_session_templates').values({
+        id: sessionTemplateId,
+        display: 'Session with Generator',
+        unique_name: 'session-gen',
+        default_recommended_time_minutes: 10,
+        created_at: Math.floor(Date.now() / 1000),
+    }).execute();
+
+    await db.insertInto('generators').values({
+        id: generatorId,
+        name: 'Test Generator',
+        strategy: 'random',
+        data_source: '["A", "B"]',
+    }).execute();
+
+    await db.insertInto('practice_session_template_required_generators').values({
+        id: 'req-1',
+        practice_session_template_id: sessionTemplateId,
+        generator_id: generatorId,
+        quantity: 1,
+    }).execute();
+
+    await db.insertInto('day_template_items').values({
+        id: 'dti-gen',
+        day_template_id: templateId,
+        practice_session_template_id: sessionTemplateId,
+        sort_order: 0,
+    }).execute();
+
+    const date = '2023-11-02';
+    const dayInstance = await dao.createFromTemplate(date, templateId);
+
+    expect(dayInstance).toBeDefined();
+    const sessions = await dao.getSessionsForDay(date);
+    expect(sessions).toHaveLength(1);
+
+    // Currently we expect NO generated values to be created automatically
+    const generatedValues = await dao.getGeneratedValuesForSession(sessions[0].id);
+    expect(generatedValues).toHaveLength(0);
+  });
 });

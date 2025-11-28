@@ -33,7 +33,9 @@
         "noUnusedVariables": {
           "level": "error",
           "fix": "safe"
-        }
+        },
+        // this has too many false positives
+        "noNestedComponentDefinitions": "off"
       },
       "suspicious": {
         "noExplicitAny": "off",
@@ -43,6 +45,11 @@
             "allow": ["error"]
           }
         }
+      },
+      "a11y": {
+        "noNoninteractiveElementInteractions": "off",
+        "noStaticElementInteractions": "off",
+        "noNoninteractiveTabindex": "off"
       },
       "nursery": {
         "useConsistentTypeDefinitions": "off"

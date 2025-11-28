@@ -97,18 +97,10 @@ export function DataTable<T extends Record<string, any>>({
     }
 
     const isCurrent = sortState.columnId === columnId;
-    let direction: 'asc' | 'desc' | null = 'asc';
-
-    if (isCurrent) {
-      if (sortState.direction === 'asc') {
-        direction = 'desc';
-      } else if (sortState.direction === 'desc') {
-        direction = null;
-      }
-    }
+    const direction = isCurrent && sortState.direction === 'asc' ? 'desc' : 'asc';
 
     onSortChange({
-      columnId: direction ? columnId : null,
+      columnId,
       direction,
     });
   };

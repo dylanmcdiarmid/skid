@@ -1,4 +1,6 @@
 import { useNavigate, useParams } from '@tanstack/react-router';
+import { formatDistanceToNow } from 'date-fns';
+import humanizeDuration from 'humanize-duration';
 import { ArrowLeftIcon, SaveIcon } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'sonner';
@@ -8,7 +10,7 @@ import {
   type PracticeSessionTemplate,
   mockPracticeSessionStore,
 } from '@/api/practice-sessions';
-import { EditableText } from '@/components/editable-text';
+import { ClickableSeamlessEditor } from '@/components/clickable-seamless-editor';
 import {
   type ItemControlProps,
   SortableList,
@@ -17,6 +19,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Spinner } from '@/components/ui/spinner';
+import { parseDurationToMinutes } from '@/lib/utils';
 
 // --- Components ---
 
@@ -64,11 +67,10 @@ const SessionLineItem = ({
         </svg>
       </button>
 
-      <div className="flex-1 space-y-2">
+      <div className="flex-1 space-y-1">
         <div className="flex gap-2">
-           <span className="mt-1.5 text-xs font-bold text-muted-foreground uppercase tracking-wider w-12 shrink-0">Title</span>
-           <EditableText
-            className="font-medium"
+           <ClickableSeamlessEditor
+            className="font-semibold text-foreground"
             disabled={disabled}
             onChange={(val) => onUpdate(item.id, { title: val })}
             onEditComplete={(val) => onUpdate(item.id, { title: val })}
@@ -77,8 +79,8 @@ const SessionLineItem = ({
           />
         </div>
         <div className="flex gap-2">
-           <span className="mt-1.5 text-xs font-bold text-muted-foreground uppercase tracking-wider w-12 shrink-0">Display</span>
-           <EditableText
+           <ClickableSeamlessEditor
+            className="text-sm text-muted-foreground"
             disabled={disabled}
             multiLine
             onChange={(val) => onUpdate(item.id, { display: val })}
@@ -225,7 +227,7 @@ export function PracticeSessionEditor({
           </Button>
           <div>
             <h1 className="font-bold text-2xl tracking-tight">
-              {mode === 'create' ? 'New Practice Session' : data.display}
+              {mode === 'create' ? 'New Practice Session' : data.display || 'Untitled Session'}
             </h1>
             <p className="text-muted-foreground">
               {mode === 'create'
@@ -250,55 +252,51 @@ export function PracticeSessionEditor({
         )}
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>General Information</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-1">
-            <label className="font-medium text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-              Display Name
-            </label>
-            <EditableText
-              onEditComplete={(val) => handleFieldUpdate('display', val)}
-              placeholder="e.g. Morning Practice"
-              sourceText={data.display}
-            />
-          </div>
-
-          {showUniqueName && (
+      {showUniqueName && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg">General Information</CardTitle>
+          </CardHeader>
+          <CardContent>
             <div className="space-y-1">
               <label className="font-medium text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                 Unique Name (ID)
               </label>
-              <EditableText
+              <ClickableSeamlessEditor
                 className="font-mono text-sm"
                 onEditComplete={(val) => handleFieldUpdate('unique_name', val)}
                 placeholder="e.g. morning_practice"
                 sourceText={data.unique_name}
               />
             </div>
-          )}
-
-          <div className="space-y-1">
-            <label className="font-medium text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-              Default Duration (Minutes)
-            </label>
-            <EditableText
-              onEditComplete={(val) => {
-                 const num = parseInt(val, 10);
-                 if (!isNaN(num)) handleFieldUpdate('default_recommended_time_minutes', num);
-              }}
-              placeholder="30"
-              sourceText={data.default_recommended_time_minutes.toString()}
-            />
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      )}
 
       <Card>
         <CardHeader>
-          <CardTitle>Line Items</CardTitle>
+          <div className="space-y-2">
+            <CardTitle className="text-xl">
+              <ClickableSeamlessEditor
+                  className="font-bold text-xl tracking-tight"
+                  inputClassName="font-bold text-xl"
+                  onEditComplete={(val) => handleFieldUpdate('display', val)}
+                  placeholder="Session Display Name"
+                  sourceText={data.display}
+              />
+            </CardTitle>
+            <div className="text-muted-foreground text-sm">
+               <ClickableSeamlessEditor
+                  className="inline-block w-auto min-w-[100px]"
+                  onEditComplete={(val) => {
+                     const minutes = parseDurationToMinutes(val);
+                     handleFieldUpdate('default_recommended_time_minutes', minutes);
+                  }}
+                  placeholder="Set duration..."
+                  sourceText={humanizeDuration(data.default_recommended_time_minutes * 60000, { round: true, largest: 2 })}
+              />
+            </div>
+          </div>
         </CardHeader>
         <CardContent>
           <SortableList
@@ -370,4 +368,3 @@ export default function PracticeSessionEditorPage() {
 
   return <PracticeSessionEditor initialData={session} mode="edit" />;
 }
-

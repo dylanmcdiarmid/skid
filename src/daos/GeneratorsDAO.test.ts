@@ -19,7 +19,7 @@ describe('GeneratorsDAO', () => {
     });
     await dao.create({ name: 'BPM', strategy: 'range' });
 
-    const list = await dao.list();
+    const { items: list } = await dao.list();
     expect(list).toHaveLength(2);
     expect(list.find((g) => g.id === g1.id)).toBeTruthy();
   });

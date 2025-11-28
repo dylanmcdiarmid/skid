@@ -25,7 +25,7 @@ describe('DayTemplatesDAO', () => {
     await dao.create({ display: 'Day A' });
     await dao.create({ display: 'Day B' });
 
-    const list = await dao.list();
+    const { items: list } = await dao.list();
     expect(list).toHaveLength(2);
   });
 

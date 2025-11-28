@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { toast } from 'sonner';
 
-import { type Generator, mockGeneratorStore } from '@/api/generators';
+import { type Generator, generatorStore } from '@/api/generators';
 import { GeneratorForm } from './generators/generator-form';
 import { GeneratorList } from './generators/generator-list';
 
@@ -23,7 +23,7 @@ export default function Generators() {
 
   const handleEdit = async (id: string) => {
     try {
-      const generator = await mockGeneratorStore.get(id);
+      const generator = await generatorStore.get(id);
       setEditingId(id);
       setEditingGenerator(generator);
       setView('edit');
@@ -36,10 +36,10 @@ export default function Generators() {
   const handleSave = async (data: any) => {
     try {
       if (view === 'create') {
-        await mockGeneratorStore.create(data);
+        await generatorStore.create(data);
         toast.success('Generator created successfully');
       } else if (view === 'edit' && editingId) {
-        await mockGeneratorStore.update(editingId, data);
+        await generatorStore.update(editingId, data);
         toast.success('Generator updated successfully');
       }
 

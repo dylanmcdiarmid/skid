@@ -22,14 +22,14 @@ describe('SessionTemplatesDAO', () => {
     expect(created.default_recommended_time_minutes).toBe(30);
 
     const fetched = await dao.get(created.id);
-    expect(fetched).toEqual(created);
+    expect(fetched).toEqual({ ...created, line_items: [] });
   });
 
   it('should list templates', async () => {
     await dao.create({ unique_name: 't1', display: 'T1' });
     await dao.create({ unique_name: 't2', display: 'T2' });
 
-    const list = await dao.list();
+    const { items: list } = await dao.list();
     expect(list).toHaveLength(2);
   });
 

@@ -40,24 +40,37 @@ module('Component | DataTable', () => {
   });
 
   test('handles sorting', async (assert) => {
-    let sortState: any = null;
+    let sortState: any = { columnId: 'name', direction: 'asc' };
     const onSortChange = (state: any) => {
       sortState = state;
     };
 
-    const { findByText } = render(
+    const { findByText, rerender } = render(
       <DataTable
         columns={columns}
         data={data}
         onSortChange={onSortChange}
-        sortState={{ columnId: 'name', direction: 'asc' }}
+        sortState={sortState}
       />
     );
 
     const header = await findByText('Name');
+    
+    // Asc -> Desc
     fireEvent.click(header.closest('th')!);
-
     assert.deepEqual(sortState, { columnId: 'name', direction: 'desc' });
+
+    // Desc -> Asc
+    rerender(
+      <DataTable
+        columns={columns}
+        data={data}
+        onSortChange={onSortChange}
+        sortState={sortState}
+      />
+    );
+    fireEvent.click(header.closest('th')!);
+    assert.deepEqual(sortState, { columnId: 'name', direction: 'asc' });
   });
 
   test('renders empty state', async (assert) => {
