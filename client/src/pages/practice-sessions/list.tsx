@@ -1,4 +1,5 @@
 import { useNavigate, useSearch } from '@tanstack/react-router';
+import { format, formatDistanceToNow } from 'date-fns';
 import { useAtomValue } from 'jotai';
 import { PencilIcon, TrashIcon } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
@@ -61,8 +62,8 @@ export function PracticeSessionList({
   const search = (searchParams.search as string) || '';
   const showDisabled = searchParams.showDisabled === 'true';
   const sortState: SortState = {
-    columnId: (searchParams.sortId as string) || null,
-    direction: (searchParams.sortDir as 'asc' | 'desc') || null,
+    columnId: (searchParams.sortId as string) || 'last_touched',
+    direction: (searchParams.sortDir as 'asc' | 'desc') || 'desc',
   };
 
   const [deleteId, setDeleteId] = useState<string | null>(null);
@@ -201,6 +202,18 @@ export function PracticeSessionList({
       ),
     },
     {
+      header: 'Last Touched',
+      accessorKey: 'last_touched',
+      enableSorting: true,
+      cell: (item) => (
+        <span className="text-sm text-muted-foreground">
+          {formatDistanceToNow(new Date(item.last_touched), {
+            addSuffix: true,
+          })}
+        </span>
+      ),
+    },
+    {
       header: 'Is Disabled?',
       accessorKey: 'disabled_at',
       enableSorting: true,
@@ -312,14 +325,20 @@ export function PracticeSessionList({
           columns={columns}
           data={paginationData.items.filter((item) => !deletedIds.has(item.id))}
           expandedRowRender={(item) => (
-             <div className="grid grid-cols-2 gap-4 text-sm p-4 bg-muted/50">
-                  <div>
-                    <span className="font-medium">Duration:</span> {item.default_recommended_time_minutes} minutes
-                  </div>
-                  <div>
-                    <span className="font-medium">Line Items:</span> {item.line_items.length} items
-                  </div>
+            <div className="grid grid-cols-2 gap-4 bg-muted/50 p-4 text-sm">
+              <div>
+                <span className="font-medium">Duration:</span>{' '}
+                {item.default_recommended_time_minutes} minutes
               </div>
+              <div>
+                <span className="font-medium">Line Items:</span>{' '}
+                {item.line_items.length} items
+              </div>
+              <div className="col-span-2">
+                <span className="font-medium">Last Touched:</span>{' '}
+                {format(new Date(item.last_touched), 'PPpp')}
+              </div>
+            </div>
           )}
           focusedId={focusedId}
           isLoading={!!isLoading}

@@ -1,4 +1,25 @@
-# Practice Session
+# Practice Session add/edit screen
+The edit screen is almost there, but we need a few updates to make it perfect. Right now we're showing a "Line Items" heading. We're going to condense this a bit. 
+
+- The unique name will now be the only thing in General Information
+- Instead of announcing Line Items, we're going to show the display name of the template, and it will be editable in place.
+- Beneath it we'll show "53" minutes (or whatever the recommended time is), with 53 being editable. When clicking either the 53, or the time "word" information, we will edit the time. We should be able to put in a human duration, and have it translated into the underlying minute integer. For example if we input "2 hours 15 minutes", it should set the underlying field to 135. But when it's displayed, it should show "2 hours and 15 minutes" or whatever is easiest with humanize-duration. If we need to update the editable-text component to make this easier, then do it. We should use the humanize-duration package to help us with this.
+- Other than unique name, and the minutes suffix, we're going to remove labels. The formatting should be enough for the user to feel where they're at.
+
+
+# TODO definite
+- [ ] Editable text Take up full available width, with an optional max width, and try to be smart about height
+ 
+# TODO maybe
+- [ ] "Refresh" button for the data table
+- [ ] There is maybe some weird sorting behavior when clicking columns a few times, they stop toggling sometimes?
+- [ ] 
+
+# Practice Session dates
+Let's add date generation to our fake data. Our practice session data, both templates at items, should now include created_at, updated_at, and a "last_touched" field that is updated_at if not null, otherwise created_at. We can get good fake data for this by using our createDateStepGenerator function.
+
+This should also be a part of the data types. We should then update our practice session list data table to add the "last touched" column. To display it, we should humanize the dates, using the humanize functions from our date-fns package. It should be our default sort order. In the expanded view, we can show the "actual" date, in the user's local time zone. Last touched should be the default sort column.
+
 
 # Add updated_at
 We've just added updated_at to:

@@ -26,8 +26,10 @@
         "@tursodatabase/database": "^0.3.2",
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
+        "date-fns": "^4.1.0",
         "dotenv": "^17.2.3",
         "elysia": "^1.4.16",
+        "humanize-duration": "^3.33.1",
         "jotai": "^2.8.0",
         "lucide-react": "^0.544.0",
         "react": "^19.1.1",
@@ -55,6 +57,7 @@
         "@testing-library/user-event": "^14.6.1",
         "@types/better-sqlite3": "^7.6.13",
         "@types/bun": "latest",
+        "@types/humanize-duration": "^3.27.4",
         "@types/jsdom": "^21.1.7",
         "@types/node": "^24.3.1",
         "@types/qunit": "^2.19.12",
@@ -759,6 +762,8 @@
 
     "@types/http-proxy": ["@types/http-proxy@1.17.17", "", { "dependencies": { "@types/node": "*" } }, "sha512-ED6LB+Z1AVylNTu7hdzuBqOgMnvG/ld6wGCG8wFnAzKX5uyW2K3WD52v0gnLCTK/VLpXtKckgWuyScYK6cSPaw=="],
 
+    "@types/humanize-duration": ["@types/humanize-duration@3.27.4", "", {}, "sha512-yaf7kan2Sq0goxpbcwTQ+8E9RP6HutFBPv74T/IA/ojcHKhuKVlk2YFYyHhWZeLvZPzzLE3aatuQB4h0iqyyUA=="],
+
     "@types/jsdom": ["@types/jsdom@21.1.7", "", { "dependencies": { "@types/node": "*", "@types/tough-cookie": "*", "parse5": "^7.0.0" } }, "sha512-yOriVnggzrnQ3a9OKOCxaVuSug3w3/SbOj5i7VwXWZEyUNl3bLF9V3MfxGbZKuwqJOQyRfqXyROBB1CoZLFWzA=="],
 
     "@types/json-schema": ["@types/json-schema@7.0.15", "", {}, "sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA=="],
@@ -1045,6 +1050,8 @@
 
     "data-urls": ["data-urls@5.0.0", "", { "dependencies": { "whatwg-mimetype": "^4.0.0", "whatwg-url": "^14.0.0" } }, "sha512-ZYP5VBHshaDAiVZxjbRVcFJpc+4xGgT0bK3vzy1HLN8jTO975HEbuYzZJcHoQEY5K1a0z8YayJkyVETa08eNTg=="],
 
+    "date-fns": ["date-fns@4.1.0", "", {}, "sha512-Ukq0owbQXxa/U3EGtsdVBkR1w7KOQ5gIBqdH2hkvknzZPYvBxb/aa6E8L7tmjFtkwZBu3UXBbjIgPo/Ez4xaNg=="],
+
     "dbmate": ["dbmate@2.28.0", "", { "optionalDependencies": { "@dbmate/darwin-arm64": "2.28.0", "@dbmate/darwin-x64": "2.28.0", "@dbmate/linux-arm": "2.28.0", "@dbmate/linux-arm64": "2.28.0", "@dbmate/linux-ia32": "2.28.0", "@dbmate/linux-x64": "2.28.0", "@dbmate/win32-x64": "2.28.0" }, "bin": { "dbmate": "dist/cli.js" } }, "sha512-kbJ+Aqna/SOsS86RuimX8X/qmo9ItG00EYMUfUQmo3xGoXBac4+PZwOYV0fVPIGakIRljNolhfJySkPAFjmZsA=="],
 
     "debounce": ["debounce@1.2.1", "", {}, "sha512-XRRe6Glud4rd/ZGQfiV1ruXSfbvfJedlV9Y6zOlP+2K04vBYiJEte6stfFkCP03aMnY5tsipamumUjL14fofug=="],
@@ -1322,6 +1329,8 @@
     "http-proxy-middleware": ["http-proxy-middleware@2.0.9", "", { "dependencies": { "@types/http-proxy": "^1.17.8", "http-proxy": "^1.18.1", "is-glob": "^4.0.1", "is-plain-obj": "^3.0.0", "micromatch": "^4.0.2" }, "peerDependencies": { "@types/express": "^4.17.13" }, "optionalPeers": ["@types/express"] }, "sha512-c1IyJYLYppU574+YI7R4QyX2ystMtVXZwIdzazUIPIJsHuWNd+mho2j+bKoHftndicGj9yh+xjd+l0yj7VeT1Q=="],
 
     "https-proxy-agent": ["https-proxy-agent@7.0.6", "", { "dependencies": { "agent-base": "^7.1.2", "debug": "4" } }, "sha512-vK9P5/iUfdl95AI+JVyUuIcVtd4ofvtrOr3HNtM2yxC9bnMbEdp3x01OhQNnjb8IJYi38VlTE3mBXwcfvywuSw=="],
+
+    "humanize-duration": ["humanize-duration@3.33.1", "", {}, "sha512-hwzSCymnRdFx9YdRkQQ0OYequXiVAV6ZGQA2uzocwB0F4309Ke6pO8dg0P8LHhRQJyVjGteRTAA/zNfEcpXn8A=="],
 
     "hyperdyperid": ["hyperdyperid@1.2.0", "", {}, "sha512-Y93lCzHYgGWdrJ66yIktxiaGULYc6oGiABxhcO5AufBeOyoIdZF7bIfLaOrbM0iGIOXQQgxxRrFEnb+Y6w1n4A=="],
 

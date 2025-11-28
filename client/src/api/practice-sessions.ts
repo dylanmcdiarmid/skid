@@ -1,4 +1,5 @@
 import { faker } from '@faker-js/faker';
+import { createDateStepGenerator } from '@/api/utils';
 import { DevSettings } from '@/lib/dev-settings';
 import type { PagArgs, Pagination } from '@/lib/utils';
 
@@ -7,6 +8,8 @@ export interface PracticeSessionLineItem {
   title: string;
   display: string;
   sort_order: number;
+  created_at: string;
+  updated_at: string | null;
 }
 
 export interface PracticeSessionTemplate {
@@ -16,6 +19,9 @@ export interface PracticeSessionTemplate {
   default_recommended_time_minutes: number;
   line_items: PracticeSessionLineItem[];
   disabled_at: string | null; // ISO Date string or null
+  created_at: string;
+  updated_at: string | null;
+  last_touched: string;
 }
 
 export type SortDirection = 'asc' | 'desc';
@@ -35,18 +41,33 @@ class MockPracticeSessionStore {
   }
 
   generateFakeSessions(count: number): PracticeSessionTemplate[] {
+    const dateGenerator = createDateStepGenerator(
+      new Date('2024-01-01'),
+      new Date(),
+      count
+    );
+
     return Array.from({ length: count }).map(() => {
+      const createdDate = dateGenerator.next();
+      const created_at = createdDate.toISOString();
+      const updatedDate = faker.datatype.boolean({ probability: 0.3 })
+        ? faker.date.between({ from: createdDate, to: new Date() })
+        : null;
+      const updated_at = updatedDate ? updatedDate.toISOString() : null;
+      const last_touched = updated_at || created_at;
+
       const lineItemCount = faker.number.int({ min: 2, max: 8 });
       const lineItems = Array.from({ length: lineItemCount }).map((_, idx) => ({
         id: faker.string.uuid(),
         title: faker.music.songName(),
         display: faker.lorem.sentence(),
         sort_order: idx,
+        created_at,
+        updated_at: null,
       }));
       const disabled_at = faker.datatype.boolean({ probability: 0.2 })
         ? new Date().toISOString()
         : null;
-      console.debug('disabled_at', disabled_at);
       return {
         id: faker.string.uuid(),
         unique_name: faker.string.alphanumeric(10),
@@ -57,6 +78,9 @@ class MockPracticeSessionStore {
         }),
         line_items: lineItems,
         disabled_at,
+        created_at,
+        updated_at,
+        last_touched,
       };
     });
   }
@@ -130,12 +154,19 @@ class MockPracticeSessionStore {
   }
 
   async create(
-    data: Omit<PracticeSessionTemplate, 'id'>
+    data: Omit<
+      PracticeSessionTemplate,
+      'id' | 'created_at' | 'updated_at' | 'last_touched'
+    >
   ): Promise<PracticeSessionTemplate> {
     await DevSettings.wait();
-    const newSession = {
+    const now = new Date().toISOString();
+    const newSession: PracticeSessionTemplate = {
       ...data,
       id: faker.string.uuid(),
+      created_at: now,
+      updated_at: null,
+      last_touched: now,
     };
     this.sessions.unshift(newSession);
     return newSession;
@@ -143,7 +174,12 @@ class MockPracticeSessionStore {
 
   async update(
     id: string,
-    data: Partial<Omit<PracticeSessionTemplate, 'id'>>
+    data: Partial<
+      Omit<
+        PracticeSessionTemplate,
+        'id' | 'created_at' | 'updated_at' | 'last_touched'
+      >
+    >
   ): Promise<PracticeSessionTemplate> {
     // For auto-save, we might not want to wait too long, but let's keep it consistent for now.
     // In a real app, we might debounce this.
@@ -154,7 +190,13 @@ class MockPracticeSessionStore {
       throw new Error('Practice session not found');
     }
 
-    this.sessions[index] = { ...this.sessions[index], ...data };
+    const now = new Date().toISOString();
+    this.sessions[index] = {
+      ...this.sessions[index],
+      ...data,
+      updated_at: now,
+      last_touched: now,
+    };
     return this.sessions[index];
   }
 
