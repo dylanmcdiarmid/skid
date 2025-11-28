@@ -1,4 +1,9 @@
+import { useState } from 'react';
+import { PracticeSessionList } from './practice-sessions/list';
+
 export default function PracticeSessions() {
+  const [focusedId, setFocusedId] = useState<string | null>(null);
+
   return (
     <div className="flex h-full min-h-0 flex-col space-y-6">
       <div>
@@ -10,11 +15,11 @@ export default function PracticeSessions() {
         </p>
       </div>
       <div className="min-h-0 flex-1">
-        <p className="text-text-secondary">
-          Practice session template list will be displayed here.
-        </p>
+        <PracticeSessionList
+          focusedId={focusedId}
+          onFocusedIdChange={setFocusedId}
+        />
       </div>
     </div>
   );
 }
-

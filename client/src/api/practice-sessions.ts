@@ -1,0 +1,173 @@
+import { faker } from '@faker-js/faker';
+import { DevSettings } from '@/lib/dev-settings';
+import type { PagArgs, Pagination } from '@/lib/utils';
+
+export interface PracticeSessionLineItem {
+  id: string;
+  title: string;
+  display: string;
+  sort_order: number;
+}
+
+export interface PracticeSessionTemplate {
+  id: string;
+  unique_name: string;
+  display: string;
+  default_recommended_time_minutes: number;
+  line_items: PracticeSessionLineItem[];
+  disabled_at: string | null; // ISO Date string or null
+}
+
+export type SortDirection = 'asc' | 'desc';
+
+export interface PracticeSessionSearchParams {
+  search?: string;
+  sortId?: string;
+  sortDir?: SortDirection;
+  showDisabled?: boolean;
+}
+
+class MockPracticeSessionStore {
+  private readonly sessions: PracticeSessionTemplate[] = [];
+
+  constructor() {
+    this.sessions = this.generateFakeSessions(20);
+  }
+
+  generateFakeSessions(count: number): PracticeSessionTemplate[] {
+    return Array.from({ length: count }).map(() => {
+      const lineItemCount = faker.number.int({ min: 2, max: 8 });
+      const lineItems = Array.from({ length: lineItemCount }).map((_, idx) => ({
+        id: faker.string.uuid(),
+        title: faker.music.songName(),
+        display: faker.lorem.sentence(),
+        sort_order: idx,
+      }));
+      const disabled_at = faker.datatype.boolean({ probability: 0.2 })
+        ? new Date().toISOString()
+        : null;
+      console.debug('disabled_at', disabled_at);
+      return {
+        id: faker.string.uuid(),
+        unique_name: faker.string.alphanumeric(10),
+        display: `Practice ${faker.music.genre()}`,
+        default_recommended_time_minutes: faker.number.int({
+          min: 15,
+          max: 60,
+        }),
+        line_items: lineItems,
+        disabled_at,
+      };
+    });
+  }
+
+  async list(
+    pagArgs: PagArgs,
+    params?: PracticeSessionSearchParams
+  ): Promise<Pagination<PracticeSessionTemplate>> {
+    await DevSettings.wait();
+
+    let filtered = [...this.sessions];
+
+    // Filter by disabled state (unless showDisabled is true)
+    if (!params?.showDisabled) {
+      filtered = filtered.filter((s) => s.disabled_at === null);
+    }
+
+    if (params?.search) {
+      const search = params.search.toLowerCase();
+      filtered = filtered.filter(
+        (s) =>
+          s.display.toLowerCase().includes(search) ||
+          s.unique_name.toLowerCase().includes(search)
+      );
+    }
+
+    if (params?.sortId) {
+      const { sortId, sortDir } = params;
+      filtered.sort((a, b) => {
+        const aVal = a[sortId as keyof PracticeSessionTemplate];
+        const bVal = b[sortId as keyof PracticeSessionTemplate];
+
+        if (
+          aVal === undefined ||
+          aVal === null ||
+          bVal === undefined ||
+          bVal === null
+        ) {
+          return 0;
+        }
+
+        if (aVal < bVal) {
+          return sortDir === 'asc' ? -1 : 1;
+        }
+        if (aVal > bVal) {
+          return sortDir === 'asc' ? 1 : -1;
+        }
+        return 0;
+      });
+    }
+
+    const start = (pagArgs.page - 1) * pagArgs.pageSize;
+    const end = start + pagArgs.pageSize;
+
+    return {
+      items: filtered.slice(start, end),
+      totalItems: filtered.length,
+      pageSize: pagArgs.pageSize,
+      currentPage: pagArgs.page,
+      totalPages: Math.ceil(filtered.length / pagArgs.pageSize),
+    };
+  }
+
+  async get(id: string): Promise<PracticeSessionTemplate> {
+    await DevSettings.wait();
+    const session = this.sessions.find((s) => s.id === id);
+    if (!session) {
+      throw new Error('Practice session not found');
+    }
+    return JSON.parse(JSON.stringify(session)); // Return copy
+  }
+
+  async create(
+    data: Omit<PracticeSessionTemplate, 'id'>
+  ): Promise<PracticeSessionTemplate> {
+    await DevSettings.wait();
+    const newSession = {
+      ...data,
+      id: faker.string.uuid(),
+    };
+    this.sessions.unshift(newSession);
+    return newSession;
+  }
+
+  async update(
+    id: string,
+    data: Partial<Omit<PracticeSessionTemplate, 'id'>>
+  ): Promise<PracticeSessionTemplate> {
+    // For auto-save, we might not want to wait too long, but let's keep it consistent for now.
+    // In a real app, we might debounce this.
+    await DevSettings.wait();
+
+    const index = this.sessions.findIndex((s) => s.id === id);
+    if (index === -1) {
+      throw new Error('Practice session not found');
+    }
+
+    this.sessions[index] = { ...this.sessions[index], ...data };
+    return this.sessions[index];
+  }
+
+  async delete(id: string): Promise<{ success: boolean; reason?: string }> {
+    await DevSettings.wait();
+    const index = this.sessions.findIndex((s) => s.id === id);
+    if (index === -1) {
+      throw new Error('Practice session not found');
+    }
+
+    this.sessions.splice(index, 1);
+    return { success: true };
+  }
+}
+
+export const mockPracticeSessionStore = new MockPracticeSessionStore();

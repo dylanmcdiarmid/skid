@@ -58,7 +58,7 @@ export class PlanningDAO {
   ) {
     return this.db
       .updateTable('planning_items')
-      .set(updates)
+      .set({ ...updates, updated_at: Math.floor(Date.now() / 1000) })
       .where('id', '=', id)
       .returningAll()
       .executeTakeFirst();

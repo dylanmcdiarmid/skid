@@ -32,9 +32,20 @@ export function DataTable<T extends Record<string, any>>({
   expandOnClick = false,
   rowKey = 'id',
   className,
+  focusedId: controlledFocusedId,
+  onFocusedIdChange,
+  onKeyBindings,
 }: DataTableProps<T>) {
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
-  const [focusedId, setFocusedId] = useState<string | null>(null);
+  const [internalFocusedId, setInternalFocusedId] = useState<string | null>(null);
+
+  const focusedId = controlledFocusedId !== undefined ? controlledFocusedId : internalFocusedId;
+  const setFocusedId = useCallback((id: string | null) => {
+    if (onFocusedIdChange) {
+      onFocusedIdChange(id);
+    }
+    setInternalFocusedId(id);
+  }, [onFocusedIdChange]);
 
   // Helper to get ID from row
   const getRowId = useCallback(
@@ -133,6 +144,15 @@ export function DataTable<T extends Record<string, any>>({
         return;
       }
 
+      const currentItem = data[currentIndex];
+
+      // Check custom key bindings first
+      if (onKeyBindings && onKeyBindings[e.key]) {
+          e.preventDefault();
+          onKeyBindings[e.key](currentItem);
+          return;
+      }
+
       if (e.key === 'ArrowDown') {
         e.preventDefault();
         const nextIndex = Math.min(data.length - 1, currentIndex + 1);
@@ -174,6 +194,8 @@ export function DataTable<T extends Record<string, any>>({
     onSelectionChange,
     selectedIds,
     toggleExpansion,
+    setFocusedId,
+    onKeyBindings
   ]);
 
   // Clear focus on outside click (simplified: just clearing on unmount or specific triggers if needed)
@@ -188,13 +210,13 @@ export function DataTable<T extends Record<string, any>>({
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  }, [setFocusedId]);
 
   const showSelectionColumn = !!onSelectionChange && !!selectedIds;
   const showExpandColumn = !!expandedRowRender && !expandOnClick; // Explicit expand column if not click-to-expand
 
   return (
-    <div className={cn('relative flex h-full flex-col', className)}>
+    <div className={cn('relative flex h-full flex-col', className)} data-slot="table-container">
       <Table>
         <TableHeader>
           <TableRow className="hover:bg-transparent">
@@ -253,7 +275,7 @@ export function DataTable<T extends Record<string, any>>({
               <React.Fragment key={id}>
                 <TableRow
                   className={cn(
-                    'cursor-default',
+                    'group cursor-default',
                     isFocused &&
                       'bg-neutral-100 ring-1 ring-brand-accent ring-inset dark:bg-neutral-800',
                     (focusOnClick || selectOnClick || expandOnClick) &&

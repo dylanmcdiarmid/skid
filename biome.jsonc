@@ -17,10 +17,23 @@
         "noDoneCallback": "off",
         "noParameterProperties": "off",
         "noNonNullAssertion": "off",
-        "useBlockStatements": "error"
+        "useBlockStatements": {
+          "level": "error",
+          "fix": "safe"
+        }
       },
       "complexity": {
-        "noExcessiveCognitiveComplexity": "off"
+        "noExcessiveCognitiveComplexity": "off",
+        "useOptionalChain": {
+          "level": "error",
+          "fix": "safe"
+        }
+      },
+      "correctness": {
+        "noUnusedVariables": {
+          "level": "error",
+          "fix": "safe"
+        }
       },
       "suspicious": {
         "noExplicitAny": "off",

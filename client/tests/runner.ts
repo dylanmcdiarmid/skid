@@ -1,30 +1,30 @@
-import QUnit from "qunit";
-import "qunit-dom";
-import { cleanup } from "@testing-library/react";
+import QUnit from 'qunit';
+import 'qunit-dom';
+import { cleanup } from '@testing-library/react';
 
 // Setup qunit-dom
-import { setup } from "qunit-dom";
+import { setup } from 'qunit-dom';
 
 setup(QUnit.assert);
 
 function getTestFilter() {
-  const cliTestFilter = process.env.TEST_FILTER || "";
+  const cliTestFilter = process.env.TEST_FILTER || '';
   const searchParams = new URLSearchParams(window.location.search);
-  const testFilesParam = searchParams.get("testFiles");
-  let testFilesArray = testFilesParam ? testFilesParam.split(",") : [];
+  const testFilesParam = searchParams.get('testFiles');
+  let testFilesArray = testFilesParam ? testFilesParam.split(',') : [];
 
-  const alreadyUsedCli = sessionStorage.getItem("alreadyUsedCli") === "true";
+  const alreadyUsedCli = sessionStorage.getItem('alreadyUsedCli') === 'true';
 
   if (!alreadyUsedCli && testFilesArray.length === 0 && cliTestFilter) {
-    sessionStorage.setItem("alreadyUsedCli", "true");
-    searchParams.set("testFiles", cliTestFilter);
-    testFilesArray = cliTestFilter.split(",");
+    sessionStorage.setItem('alreadyUsedCli', 'true');
+    searchParams.set('testFiles', cliTestFilter);
+    testFilesArray = cliTestFilter.split(',');
     window.location.search = searchParams.toString();
   }
   return testFilesArray;
 }
 
-const testContext = import.meta.webpackContext("../src", {
+const testContext = import.meta.webpackContext('../src', {
   recursive: true,
   regExp: /\.test\.(ts|tsx|js|jsx)$/,
 });

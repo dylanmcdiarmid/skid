@@ -5,10 +5,32 @@ Routes that start with /api will be calls to the api, everything else not matche
 - [x] Send down global for development mode so we can show component demo pages
 - [x] Cachebust!
 - [x] Add component demo pages to the sidebar
-- [ ] Data table based on TanStack Table
+- [x] Data table based on TanStack Table
   - filtering
   - pagination
+- [ ] Update data table demo to be able to take filter information from the url
 
+# Search Faceting for Data Table
+Let's create a couple new components to help us with more advanced cases for the Data Table. 
+
+## Faceted Search Tags
+I'd like a flexible component that we can pass an array of current facets to. It will display the facets as little tags that you can easily click off. Here's a rough illustration of the concept I'm describing.
+
+[ My Search Term ] (  ) Large (*) Medium (  ) Small
+( x search = "My Search Term" ) ( x size = Medium )
+
+Each tag should be configurable with an optional color class override to make the tag look different (in case we want search to be a different color than facets selected from a dropdown, for example). They should also have callbacks for onClick. We can assume for now that clicking a tag will remove it, but it's the parent's responsibility to provide the component with the list of active filters. Normally we'd put this component underneath the search bar or filter area, so when we add it to the demo data table, let's make sure to do that.
+
+## Multi-Select Dropdown for Filtering
+We should have a component capable of turning on and off boolean filters. When opening the dropdown, it should be clear which components are on and which are off. Multiple entries in the dropdown should be able to be on simultaneously, unless this feature is explictly turned off through the component attributes.
+
+## Final thoughts
+
+Remember when creating these we can bunx shadcn install additional components if needed, make sure you decide ahead of time in the planning phase what to use and I'll make sure they are installed (or we can use existing components / components that have already been installed.
+
+If it's useful to add a boolean column to the data that the demo data table using to demonstrate these features, go ahead.
+
+Once we're done with the components, remember to create unit tests for them.
 
 # Data Table
 We'll be using Tanstack Table, which should already be available in the project (@tanstack/react-table)

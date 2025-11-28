@@ -29,6 +29,14 @@ describe('DayTemplatesDAO', () => {
     expect(list).toHaveLength(2);
   });
 
+  it('should update a day template', async () => {
+    const created = await dao.create({ display: 'Original' });
+    const updated = await dao.update(created.id, { display: 'Updated' });
+
+    expect(updated?.display).toBe('Updated');
+    expect(updated?.updated_at).toBeTruthy();
+  });
+
   it('should add sessions to a day template', async () => {
     const day = await dao.create({ display: 'Day A' });
 

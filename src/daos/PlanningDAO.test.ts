@@ -46,6 +46,7 @@ describe('PlanningDAO', () => {
 
     const fetched = await dao.get(task.id);
     expect(fetched?.was_rejected).toBe(1);
+    expect(fetched?.updated_at).toBeTruthy();
   });
 
   it('should complete items', async () => {
@@ -57,5 +58,6 @@ describe('PlanningDAO', () => {
 
     const fetched = await dao.get(task.id);
     expect(fetched?.completed_at).toBeTruthy();
+    expect(fetched?.updated_at).toBeTruthy();
   });
 });

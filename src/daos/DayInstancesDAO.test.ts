@@ -25,6 +25,18 @@ describe('DayInstancesDAO', () => {
     expect(fetched).toEqual(created);
   });
 
+  it('should update a day instance', async () => {
+    const date = '2023-10-25';
+    await dao.createDay({
+      id: date,
+      notes: 'Initial note',
+    });
+
+    const updated = await dao.updateDay(date, { notes: 'Updated note' });
+    expect(updated?.notes).toBe('Updated note');
+    expect(updated?.updated_at).toBeTruthy();
+  });
+
   it('should manage session instances', async () => {
     const date = '2023-10-26';
     await dao.createDay({ id: date });
@@ -47,6 +59,7 @@ describe('DayInstancesDAO', () => {
     });
     expect(updated?.actual_time_spent_minutes).toBe(35);
     expect(updated?.completed_at).toBeTruthy();
+    expect(updated?.updated_at).toBeTruthy();
   });
 
   it('should manage line item instances', async () => {
@@ -71,6 +84,7 @@ describe('DayInstancesDAO', () => {
       completed_at: Date.now(),
     });
     expect(updated?.is_completed).toBe(1);
+    expect(updated?.updated_at).toBeTruthy();
   });
 
   it('should create line item with optional title', async () => {
@@ -117,9 +131,11 @@ describe('DayInstancesDAO', () => {
 
     const updated = await dao.updateLineItem(item.id, { title: 'New Title' });
     expect(updated?.title).toBe('New Title');
+    expect(updated?.updated_at).toBeTruthy();
 
     const cleared = await dao.updateLineItem(item.id, { title: null });
     expect(cleared?.title).toBeNull();
+    expect(cleared?.updated_at).toBeTruthy();
   });
 
   it('should manage generated values', async () => {

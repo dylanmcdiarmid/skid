@@ -52,7 +52,7 @@ export class SessionTemplatesDAO {
   ) {
     return this.db
       .updateTable('practice_session_templates')
-      .set(updates)
+      .set({ ...updates, updated_at: Math.floor(Date.now() / 1000) })
       .where('id', '=', id)
       .returningAll()
       .executeTakeFirst();
@@ -97,7 +97,7 @@ export class SessionTemplatesDAO {
   ) {
     return this.db
       .updateTable('practice_session_line_items')
-      .set(updates)
+      .set({ ...updates, updated_at: Math.floor(Date.now() / 1000) })
       .where('id', '=', id)
       .returningAll()
       .executeTakeFirst();

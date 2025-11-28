@@ -41,6 +41,7 @@ describe('SessionTemplatesDAO', () => {
 
     const updated = await dao.update(created.id, { display: 'Updated T1' });
     expect(updated?.display).toBe('Updated T1');
+    expect(updated?.updated_at).toBeTruthy();
   });
 
   it('should add and list line items', async () => {
@@ -100,9 +101,12 @@ describe('SessionTemplatesDAO', () => {
 
     const updated = await dao.updateLineItem(item.id, { title: 'New Title' });
     expect(updated?.title).toBe('New Title');
+    expect(updated?.updated_at).toBeTruthy();
 
     const cleared = await dao.updateLineItem(item.id, { title: null });
     expect(cleared?.title).toBeNull();
+    expect(cleared?.updated_at).toBeTruthy();
+    expect(cleared?.updated_at).toBeGreaterThanOrEqual(updated!.updated_at!);
   });
 
   it('should add and remove required generators', async () => {

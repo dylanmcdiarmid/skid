@@ -5,6 +5,7 @@ CREATE TABLE practice_session_templates (
   display TEXT NOT NULL,
   default_recommended_time_minutes INTEGER DEFAULT 30,
   created_at INTEGER DEFAULT (unixepoch()),
+  updated_at INTEGER,
   disabled_at INTEGER
 );
 CREATE TABLE practice_session_line_items (
@@ -13,12 +14,14 @@ CREATE TABLE practice_session_line_items (
   title TEXT,
   display TEXT NOT NULL,
   sort_order INTEGER DEFAULT 0,
-  created_at INTEGER DEFAULT (unixepoch())
+  created_at INTEGER DEFAULT (unixepoch()),
+  updated_at INTEGER
 );
 CREATE TABLE day_templates (
   id TEXT PRIMARY KEY NOT NULL,
   display TEXT NOT NULL,
   created_at INTEGER DEFAULT (unixepoch()),
+  updated_at INTEGER,
   disabled_at INTEGER
 );
 CREATE TABLE day_template_items (
@@ -32,7 +35,8 @@ CREATE TABLE day_instances (
   id TEXT PRIMARY KEY NOT NULL, -- YYYY-MM-DD
   source_day_template_id TEXT REFERENCES day_templates(id) ON DELETE SET NULL,
   notes TEXT,
-  created_at INTEGER DEFAULT (unixepoch())
+  created_at INTEGER DEFAULT (unixepoch()),
+  updated_at INTEGER
 );
 CREATE TABLE practice_session_instances (
   id TEXT PRIMARY KEY NOT NULL,
@@ -44,6 +48,7 @@ CREATE TABLE practice_session_instances (
   actual_time_spent_minutes INTEGER DEFAULT 0,
   notes TEXT,
   created_at INTEGER DEFAULT (unixepoch()),
+  updated_at INTEGER,
   completed_at INTEGER,
   canceled_at INTEGER
 );
@@ -56,6 +61,7 @@ CREATE TABLE practice_session_instance_line_items (
   sort_order INTEGER DEFAULT 0,
   is_completed INTEGER DEFAULT 0,
   completed_at INTEGER,
+  updated_at INTEGER,
   notes TEXT
 );
 CREATE TABLE planning_items (
@@ -65,7 +71,8 @@ CREATE TABLE planning_items (
   min_day_instance_id TEXT,
   was_rejected INTEGER DEFAULT 0,
   created_at INTEGER DEFAULT (unixepoch()),
-  completed_at INTEGER
+  completed_at INTEGER,
+  updated_at INTEGER
 );
 CREATE TABLE generators (
   id TEXT PRIMARY KEY NOT NULL,

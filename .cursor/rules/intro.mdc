@@ -56,7 +56,7 @@ Use 'bun:test' for testing. src/testutils.ts has a createTestDb function that al
 Tests should be next to the file they are testing, e.g. foo.ts gets foo.test.ts
 
 ## 8. API
-When writing an API, we should use Elysia's Eden Treaty. 
+When writing an API, we should use Elysia's Eden Treaty. We should always use TypeBox, not zod.
 
 ## 9. Data Access Objects
 Business logic should always be called through Data Access Objects. These are simple classes that receive a Kysely<Database> "db" type on instatiation, and then just have methods to wrap CRUD and other database operations. This gives us a layer inbetween the kysely database functions and business logic.
@@ -72,3 +72,6 @@ We should always support dark mode alternatives, as this app can run in light mo
 
 ## 11. Client Side Assets
 We use Elysia's static plugin to serve assets. The route should always start with '/assets', e.g. '/assets/css/dev/bundle.css'
+
+## 12. Client Side Components
+We do have some nice supporting components, such as editable text, sortable lists, and a data table, which are all in addition to the baseline ShadCN components. If you need to add a new ShadCN component, you can do it with `bunx shadcn add foo`

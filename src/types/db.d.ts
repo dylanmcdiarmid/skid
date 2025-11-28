@@ -14,6 +14,7 @@ export interface DayInstances {
   id: string;
   notes: string | null;
   source_day_template_id: string | null;
+  updated_at: number | null;
 }
 
 export interface DayTemplateItems {
@@ -29,6 +30,7 @@ export interface DayTemplates {
   disabled_at: number | null;
   display: string;
   id: string;
+  updated_at: number | null;
 }
 
 export interface GeneratorHistory {
@@ -53,6 +55,7 @@ export interface PlanningItems {
   id: string;
   min_day_instance_id: string | null;
   notes: string | null;
+  updated_at: number | null;
   was_rejected: Generated<number | null>;
 }
 
@@ -74,6 +77,7 @@ export interface PracticeSessionInstanceLineItems {
   sort_order: Generated<number | null>;
   source_line_item_id: string | null;
   title: string | null;
+  updated_at: number | null;
 }
 
 export interface PracticeSessionInstances {
@@ -88,6 +92,7 @@ export interface PracticeSessionInstances {
   practice_session_template_id: string | null;
   recommended_time_minutes: number | null;
   sort_order: Generated<number | null>;
+  updated_at: number | null;
 }
 
 export interface PracticeSessionLineItems {
@@ -97,6 +102,7 @@ export interface PracticeSessionLineItems {
   practice_session_template_id: string;
   sort_order: Generated<number | null>;
   title: string | null;
+  updated_at: number | null;
 }
 
 export interface PracticeSessionTemplateRequiredGenerators {
@@ -114,6 +120,7 @@ export interface PracticeSessionTemplates {
   display: string;
   id: string;
   unique_name: string;
+  updated_at: number | null;
 }
 
 export interface SchemaMigrations {

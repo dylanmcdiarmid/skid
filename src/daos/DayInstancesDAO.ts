@@ -38,7 +38,7 @@ export class DayInstancesDAO {
   ) {
     return this.db
       .updateTable('day_instances')
-      .set(updates)
+      .set({ ...updates, updated_at: Math.floor(Date.now() / 1000) })
       .where('id', '=', id)
       .returningAll()
       .executeTakeFirst();
@@ -92,7 +92,7 @@ export class DayInstancesDAO {
   ) {
     return this.db
       .updateTable('practice_session_instances')
-      .set(updates)
+      .set({ ...updates, updated_at: Math.floor(Date.now() / 1000) })
       .where('id', '=', id)
       .returningAll()
       .executeTakeFirst();
@@ -146,7 +146,7 @@ export class DayInstancesDAO {
   ) {
     return this.db
       .updateTable('practice_session_instance_line_items')
-      .set(updates)
+      .set({ ...updates, updated_at: Math.floor(Date.now() / 1000) })
       .where('id', '=', id)
       .returningAll()
       .executeTakeFirst();

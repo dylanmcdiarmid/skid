@@ -21,8 +21,18 @@
     "noUncheckedSideEffectImports": true,
     "strictNullChecks": true,
     "types": ["bun-types", "react", "react-dom"],
+    "baseUrl": ".",
     "paths": {
-      "@/client/*": ["./client/src/*"]
+      "@/*": ["client/src/*"],
+      "@/client/*": ["./client/src/*"],
+      "@gen/*": ["client/src/gen/*"],
+      "@tests/*": ["client/tests/*"],
+      "@state/*": ["client/src/state/*"],
+      "@lib/*": ["client/src/lib/*"],
+      "@hooks/*": ["client/src/hooks/*"],
+      "@components/*": ["client/src/components/*"],
+      "@pages/*": ["client/src/pages/*"],
+      "@/types/*": ["client/src/types/*"]
     }
   },
   "include": ["src", "scripts", "check_schema.ts"]

@@ -40,6 +40,13 @@ export interface DataTableProps<T> {
   selectOnClick?: boolean;
   expandOnClick?: boolean;
 
+  // Focus control
+  focusedId?: string | null;
+  onFocusedIdChange?: (id: string | null) => void;
+
+  // Custom key bindings
+  onKeyBindings?: Record<string, (item: T) => void>;
+
   // Key to use as unique identifier for rows (defaults to 'id')
   rowKey?: keyof T;
 

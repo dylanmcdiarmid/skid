@@ -15,7 +15,9 @@ import { TopBar } from '@/components/top-bar';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { Toaster } from '@/components/ui/sonner';
 import DayTemplates from './pages/day-templates';
-import DemoDataTable from './pages/demo-data-table';
+import DemoDataTable, {
+  demoTableSearchValidator,
+} from './pages/demo-data-table';
 import DemoEditableList from './pages/demo-editable-list';
 import DemoEditableText from './pages/demo-editable-text';
 import DemoSortableList from './pages/demo-sortable-list';
@@ -24,6 +26,7 @@ import Generators from './pages/generators';
 import History from './pages/history';
 import Planning from './pages/planning';
 import PracticeSessions from './pages/practice-sessions';
+import PracticeSessionEditorPage from './pages/practice-sessions/editor';
 import Settings from './pages/settings';
 import Today from './pages/today';
 import {
@@ -138,6 +141,11 @@ const routeTree = rootRoute.addChildren([
   }),
   createRoute({
     getParentRoute: () => rootRoute,
+    path: '/templates/sessions/$sessionId',
+    component: PracticeSessionEditorPage,
+  }),
+  createRoute({
+    getParentRoute: () => rootRoute,
     path: '/templates/generators',
     component: Generators,
   }),
@@ -173,6 +181,7 @@ const routeTree = rootRoute.addChildren([
     getParentRoute: () => rootRoute,
     path: '/demo/data-table',
     component: DemoDataTable,
+    validateSearch: demoTableSearchValidator,
   }),
 ]);
 
